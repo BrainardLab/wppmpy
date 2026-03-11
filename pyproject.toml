@@ -1,0 +1,6 @@
+[tool.ruff]
+# Style choices: line length and rule selection (tweak to taste)
+line-length = 88
+
+# Optionally enable target Python version:
+# target-version = "py312"

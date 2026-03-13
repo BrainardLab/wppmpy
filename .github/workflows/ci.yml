@@ -19,31 +19,61 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Create & use virtualenv
-        shell: bash -e {0}
+      - name: Create & use virtualenv (robust)
+        shell: bash -l {0}
         run: |
-          python -m venv .venv
-          ls -la .venv
+          set -euo pipefail
 
-          if [ ! -x ".venv/bin/python" ]; then
-            echo "ERROR: .venv/bin/python not found"
+          echo ">>> python info"
+          python -V || true
+          which python || true
+          python -c "import sys; print('sys.executable=', sys.executable, 'sys.prefix=', sys.prefix, 'version=', sys.version)" || true
+
+          echo "Attempting to create venv at .venv (try python then python3)"
+          if python -m venv .venv > /dev/null 2>&1; then
+            echo "Created venv with 'python -m venv .venv'"
+          elif python3 -m venv .venv > /dev/null 2>&1; then
+            echo "Created venv with 'python3 -m venv .venv'"
+          else
+            echo "ERROR: failed to create venv with both 'python' and 'python3'. Dumping diagnostics..."
+            echo "---- python -m venv stdout/stderr ----"
+            python -m venv .venv || true
+            python3 -m venv .venv || true
+            echo "---- workspace listing ----"
             ls -la
+            echo "---- ls -la /usr/bin for python binaries ----"
+            ls -la /usr/bin | grep python || true
             exit 1
           fi
 
-          source .venv/bin/activate
-          python -V
-          which python
+          echo "Listing .venv contents (top-level):"
+          ls -la .venv || true
+          echo "Listing .venv/bin:"
+          ls -la .venv/bin || true
 
-          python -m pip install --upgrade pip
-          python -m pip install ruff mypy
+          VENV_PY=.venv/bin/python
+          if [ ! -x "$VENV_PY" ]; then
+            echo "ERROR: $VENV_PY not executable or missing. Showing find results (maxdepth 4):"
+            find .venv -maxdepth 4 -ls || true
+            exit 1
+          fi
+
+          echo "Using venv python: $VENV_PY"
+          $VENV_PY -V
+          $VENV_PY -m pip --version || (echo "pip missing in venv, attempting ensurepip" && $VENV_PY -m ensurepip --upgrade || true)
+
+          echo "Upgrading pip and installing tools"
+          $VENV_PY -m pip install --upgrade pip
+          $VENV_PY -m pip install ruff mypy
 
       - name: Run Ruff (lint + format check)
+        shell: bash -l {0}
         run: |
-          . .venv/bin/activate
-          ruff check .
+          .venv/bin/python -m ruff --version || echo "ruff not installed"
+          .venv/bin/python -m ruff check .
 
       - name: Run mypy (type check)
+        shell: bash -l {0}
         run: |
-          . .venv/bin/activate
-          mypy .
+          .venv/bin/python -m mypy --version || echo "mypy not installed"
+          .venv/bin/python -m mypy .

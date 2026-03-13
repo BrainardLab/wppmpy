@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ main, master ]
 
+permissions:
+  contents: read
+
 jobs:
   checks:
     runs-on: ubuntu-latest
@@ -14,20 +17,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Setup Python 3.12
         uses: actions/setup-python@v4
         with:
           python-version: "3.12"
 
-      - name: Create & use virtualenv (robust)
+      - name: Create & use virtualenv (robust, remove preexisting)
         shell: bash -l {0}
         run: |
           set -euo pipefail
 
           echo ">>> python info"
-          python -V || true
-          which python || true
-          python -c "import sys; print('sys.executable=', sys.executable, 'sys.prefix=', sys.prefix, 'version=', sys.version)" || true
+          python -V
+          which python
+          python -c "import sys; print('sys.executable=', sys.executable, 'sys.prefix=', sys.prefix, 'version=', sys.version)"
+
+          # Remove any pre-existing .venv (if it was committed or left behind)
+          if [ -e ".venv" ]; then
+            echo "Removing pre-existing .venv"
+            rm -rf .venv
+            echo "Removed .venv"
+          fi
 
           echo "Attempting to create venv at .venv (try python then python3)"
           if python -m venv .venv > /dev/null 2>&1; then
@@ -41,8 +51,8 @@ jobs:
             python3 -m venv .venv || true
             echo "---- workspace listing ----"
             ls -la
-            echo "---- ls -la /usr/bin for python binaries ----"
-            ls -la /usr/bin | grep python || true
+            echo "---- find top-level ----"
+            find . -maxdepth 2 -ls || true
             exit 1
           fi
 
@@ -53,14 +63,14 @@ jobs:
 
           VENV_PY=.venv/bin/python
           if [ ! -x "$VENV_PY" ]; then
-            echo "ERROR: $VENV_PY not executable or missing. Showing find results (maxdepth 4):"
+            echo "ERROR: $VENV_PY not executable or missing. Showing find results:"
             find .venv -maxdepth 4 -ls || true
             exit 1
           fi
 
           echo "Using venv python: $VENV_PY"
           $VENV_PY -V
-          $VENV_PY -m pip --version || (echo "pip missing in venv, attempting ensurepip" && $VENV_PY -m ensurepip --upgrade || true)
+          $VENV_PY -m pip --version || (echo "pip missing; attempting ensurepip" && $VENV_PY -m ensurepip --upgrade || true)
 
           echo "Upgrading pip and installing tools"
           $VENV_PY -m pip install --upgrade pip

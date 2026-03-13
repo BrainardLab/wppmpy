@@ -18,5 +18,6 @@ repos:
   rev: v1.11.0
   hooks:
     - id: mypy
-      args: ["--exclude", "(^|/)(\\.venv|venv)(/|$)", "."]
+      pass_filenames: false
+      args: ["--config-file", "mypy.ini", "--exclude", "(^|/)(\\.venv|venv)(/|$)", "."]
       files: \.py$

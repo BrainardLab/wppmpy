@@ -4,19 +4,8 @@
         "editor.defaultFormatter": "charliermarsh.ruff"
     },
     "editor.formatOnSave": true,
-    "editor.formatOnSaveMode": "file",
-    "ruff.lint.run": "onSave",
     "editor.codeActionsOnSave": {
-        "source.fixAll": true
-    },
-    "python.defaultInterpreterPath": ".venv/bin/python",
-    "[python]": {
-        "editor.defaultFormatter": "astral-sh.ruff"
-    },
-    "editor.formatOnSave": true,
-    "ruff.lint.run": "onSave",
-    "editor.codeActionsOnSave": {
-        "source.fixAll": true
+        "source.fixAll": "explicit"
     },
     "python.analysis.typeCheckingMode": "strict",
     "python.analysis.diagnosticMode": "workspace"

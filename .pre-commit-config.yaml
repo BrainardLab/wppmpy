@@ -6,6 +6,11 @@ repos:
         args:
         - --fix
     -   id: ruff-format
+-   repo: https://github.com/nbQA-dev/nbQA
+    rev: 1.9.1
+    hooks:
+    -   id: nbqa-mypy
+        additional_dependencies: [mypy==1.19.1]
 -   repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.19.1
     hooks:

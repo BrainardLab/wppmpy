@@ -2,15 +2,16 @@
 
 Python code accompanying the **Wishart Process Psychophysical Model (WPPM)** — a Bayesian semi-parametric model that characterises how internal perceptual noise varies continuously across color space.
 
-The model and the experimental data it was fit to are described in:
+Background on the model and related experimental data iare described in:
 
-> **Brainard et al.** *Comprehensive characterization of human color discrimination using a Wishart process psychophysical model.*
+> **Hong et al.** *Comprehensive characterization of human color discrimination using a Wishart process psychophysical model.*
 > eLife Reviewed Preprint (2025). https://elifesciences.org/reviewed-preprints/108943v1
 
-This repository provides:
+This repository is being set up to provide:
 - **Illustrative examples** of the statistical ideas underlying the WPPM
-- **Analysis code** for the data collected in the paper
-- **Tools** to help readers understand and reproduce our results
+- **Additional analysis code** beyond that provided in the repository accompanying the paper
+- **Tools** to help readers understand and use our results
+These will be developed and added over time.
 
 ---
 

@@ -19,7 +19,7 @@ These will be developed and added over time.
 
 ### Bayesian inference with a finite sinusoidal basis
 
-A key idea in the WPPM is that a smoothness prior is used to leverage data collected across the stimulus space.  This notebook illustrates the idea of using such a prior together with Bayesian inference for a simple example. A finite  inusoidal basis is used to represent functions on $[0, 2\pi)$, an exponentially-decaying (with spatial frequency) Gaussian prior over weights on the basis function encodes a preference for smooth functions, and the closed-form Gaussian posterior is computed from a small number of noisy measurements.
+A key idea in the WPPM is that a smoothness prior is used to leverage data collected across the stimulus space.  This notebook illustrates the idea of using such a prior together with Bayesian inference for a simple example. A finite  inusoidal basis is used to represent functions on $[0, 2\pi)$, an exponentially-decaying (with spatial frequency) Gaussian prior over weights on the basis function encodes a preference for smooth functions, and the closed-form Gaussian posterior is computed from a small number of noisy measurements.  The example also illustrates the improvement you can get if you use a simple heuristic to drive adaptive measurement sampling.
 
 | | |
 |---|---|

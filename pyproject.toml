@@ -1,6 +1,32 @@
-[tool.ruff]
-# Style choices: line length and rule selection (tweak to taste)
-line-length = 88
+[project]
+name = "wppmpy"
+version = "0.1.0"
+requires-python = ">=3.12"
 
-# Optionally enable target Python version:
-# target-version = "py312"
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+show_error_codes = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+disallow_subclassing_any = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_unreachable = true
+no_implicit_optional = true
+follow_imports = "normal"
+exclude = "(^|/)(\\.venv|venv|\\.git|\\.tox|build|dist)(/|$)"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes (undefined names, unused imports)
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+]

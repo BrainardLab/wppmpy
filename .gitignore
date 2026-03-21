@@ -19,3 +19,6 @@ build/
 # Misc
 *.pyc
 .DS_Store
+
+# Downloaded datasets — fetch via src/hong_etal_2025/download_data.py
+data/

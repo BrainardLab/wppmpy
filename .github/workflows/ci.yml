@@ -77,7 +77,7 @@ jobs:
 
           echo "Upgrading pip and installing tools"
           $VENV_PY -m pip install --upgrade pip
-          $VENV_PY -m pip install ruff mypy
+          $VENV_PY -m pip install ruff mypy pytest numpy matplotlib
 
       - name: Run Ruff (lint + format check)
         shell: bash -l {0}
@@ -90,3 +90,8 @@ jobs:
         run: |
           .venv/bin/python -m mypy --version || echo "mypy not installed"
           .venv/bin/python -m mypy .
+
+      - name: Run pytest
+        shell: bash -l {0}
+        run: |
+          .venv/bin/python -m pytest --tb=short -v

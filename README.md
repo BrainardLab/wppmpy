@@ -26,6 +26,17 @@ A key idea in the WPPM is that a smoothness prior is used to leverage data colle
 | **Run interactively in your browser** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/BrainardLab/wppmpy/blob/main/src/example_finitebasis_gaussian/example_finitebasis_gaussian.ipynb) |
 | **View as a static page** | [![nbviewer](https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.svg)](https://nbviewer.org/github/BrainardLab/wppmpy/blob/main/src/example_finitebasis_gaussian/example_finitebasis_gaussian.ipynb) |
 
+### Threshold ellipses from pre-computed tables (Hong et al. 2025, Figure 2C)
+
+The WPPM was fit to color discrimination data from eight participants and used to read out threshold ellipses on a 7 × 7 grid of reference stimuli in the isoluminant plane of a 2-D model colour space.  This notebook reproduces Figure 2C of Hong et al. (2025) by reading those pre-computed covariance matrices directly from the paper's OSF dataset — no model fitting or JAX computation required.  It also shows how to construct the 95 % bootstrap confidence regions reported in the paper: for each of 120 bootstrap model fits, it ranks datasets by their summed Normalized Bures Similarity to the original fit, retains the top 95 % (114/120), and plots the resulting inner/outer radial envelopes as a coloured band around each black ellipse.
+
+**Prerequisites:** the paper repository [ellipsoids_eLife2025](https://github.com/fh862/ellipsoids_eLife2025) must be installed in the same Python environment (`pip install -e /path/to/ellipsoids_eLife2025`), and the OSF data subset must be downloaded once by running `python src/hong_etal_2025/download_data.py`.
+
+| | |
+|---|---|
+| **Run interactively in your browser** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/BrainardLab/wppmpy/blob/main/src/hong_etal_2025/ellipses_from_tables.ipynb) |
+| **View as a static page** | [![nbviewer](https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.svg)](https://nbviewer.org/github/BrainardLab/wppmpy/blob/main/src/hong_etal_2025/ellipses_from_tables.ipynb) |
+
 ---
 
 ## Installation
@@ -45,6 +56,9 @@ pip install numpy matplotlib
 ```
 src/
   example_finitebasis_gaussian/   # introductory Bayesian inference notebook
+  hong_etal_2025/                 # notebooks and data download for Hong et al. (2025)
+    download_data.py              # fetch required OSF data subset
+    ellipses_from_tables.ipynb    # reproduce Figure 2C with 95% CI bands
 ```
 
 ---

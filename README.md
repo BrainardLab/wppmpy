@@ -30,7 +30,7 @@ A key idea in the WPPM is that a smoothness prior is used to leverage data colle
 
 The WPPM was fit to color discrimination data from eight participants and used to read out threshold ellipses on a 7 × 7 grid of reference stimuli in the isoluminant plane of a 2-D model colour space.  This notebook reproduces Figure 2C of Hong et al. (2025) by reading those pre-computed covariance matrices directly from the paper's OSF dataset — no model fitting or JAX computation required.  It also shows how to construct the 95 % bootstrap confidence regions reported in the paper: for each of 120 bootstrap model fits, it ranks datasets by their summed Normalized Bures Similarity to the original fit, retains the top 95 % (114/120), and plots the resulting inner/outer radial envelopes as a coloured band around each black ellipse.
 
-**Prerequisites:** the paper repository [ellipsoids_eLife2025](https://github.com/fh862/ellipsoids_eLife2025) must be installed in the same Python environment (`pip install -e /path/to/ellipsoids_eLife2025`), and the OSF data subset must be downloaded once by running `python src/hong_etal_2025/download_data.py`.
+**Data:** download the required OSF data subset once after installation by running `python src/hong_etal_2025/download_data.py`.
 
 | | |
 |---|---|

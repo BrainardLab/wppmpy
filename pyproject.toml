@@ -3,8 +3,24 @@ name = "wppmpy"
 version = "0.1.0"
 requires-python = ">=3.12"
 
+# Core dependencies (needed for the toolbox and first notebook)
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+]
+
 [project.optional-dependencies]
-dev = ["pytest", "numpy", "matplotlib"]
+# Install with:  pip install -e ".[notebooks]"
+# Pulls in the paper repo (jax, pandas, scikit-image, shapely, etc.) from GitHub.
+# JAX note: this installs the CPU-only build.  For GPU support install
+# jax[cuda12] separately; see https://jax.readthedocs.io/en/latest/installation.html
+notebooks = [
+    "ellipsoids-elife2025 @ git+https://github.com/fh862/ellipsoids_eLife2025.git",
+    "pandas",
+    "jupyter",
+]
+dev = ["pytest"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

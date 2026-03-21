@@ -45,8 +45,21 @@ The WPPM was fit to color discrimination data from eight participants and used t
 git clone https://github.com/BrainardLab/wppmpy.git
 cd wppmpy
 python -m venv .venv
-source .venv/bin/activate
-pip install numpy matplotlib
+source .venv/bin/activate      # macOS / Linux
+# .venv\Scripts\activate       # Windows
+pip install -e .
+```
+
+To also run the Hong et al. (2025) notebooks, install the notebook dependencies (this pulls in the paper repository and all its requirements, including JAX, automatically):
+
+```bash
+pip install -e ".[notebooks]"
+```
+
+Then download the required data subset from OSF once:
+
+```bash
+python src/hong_etal_2025/download_data.py
 ```
 
 ---

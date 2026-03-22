@@ -3,17 +3,22 @@
 
 Downloads into  <repo_root>/data/  (git-ignored), preserving OSF folder structure.
 
-Files fetched
--------------
+Files fetched (always)
+----------------------
 - Organized data and model predictions/sub{N}/Thres_ellipses_sub{N}.csv
   Threshold-ellipse covariance matrices on the 7×7 reference grid.
 
 - Calibration and transformation/Transformation matrices/*.csv
   Monitor calibration matrices needed for the 2DW ↔ RGB colour conversion.
 
+Files fetched (with --fits)
+---------------------------
+- Organized data and model predictions/sub{N}/analyzed data files with class objects/
+  Main fit and 120 bootstrap Wishart process fit objects (may be large).
+
 Usage
 -----
-    python src/hong_etal_2025/download_data.py [--subjects 1 2 4 ...]
+    python src/hong_etal_2025/download_data.py [--subjects 1 2 4 ...] [--fits]
 
 No third-party packages required — stdlib only.
 """
@@ -144,6 +149,48 @@ def download_thres_ellipses(
             print(f"  warn: '{target}' not found under '{sub_name}'", file=sys.stderr)
 
 
+def download_fit_pkls(
+    root_items: list[Any], data_dir: Path, subjects: list[Any]
+) -> None:
+    """Download main-fit and bootstrap pkl files for each subject."""
+    org_url = _find_subfolder(root_items, "Organized data and model predictions")
+    if not org_url:
+        print(
+            "  warn: 'Organized data and model predictions' folder not found",
+            file=sys.stderr,
+        )
+        return
+    org_items = _list_folder(org_url)
+    for sub_n in subjects:
+        sub_name = f"sub{sub_n}"
+        sub_url = _find_subfolder(org_items, sub_name)
+        if not sub_url:
+            print(f"  warn: folder '{sub_name}' not found in OSF", file=sys.stderr)
+            continue
+        sub_items = _list_folder(sub_url)
+        fits_folder = "analyzed data files with class objects"
+        fits_url = _find_subfolder(sub_items, fits_folder)
+        if not fits_url:
+            print(
+                f"  warn: '{fits_folder}' subfolder not found for {sub_name}",
+                file=sys.stderr,
+            )
+            continue
+        dest_dir = (
+            data_dir / "Organized data and model predictions" / sub_name / fits_folder
+        )
+        n = 0
+        for item in _list_folder(fits_url):
+            if item.get("attributes", {}).get("kind") == "file" and item["attributes"][
+                "name"
+            ].endswith(".pkl"):
+                dl_url = item["links"].get("download", "")
+                if dl_url:
+                    _download_file(dl_url, dest_dir / item["attributes"]["name"])
+                    n += 1
+        print(f"  {sub_name}: {n} pkl file(s) processed")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -161,6 +208,12 @@ def main() -> None:
         default=DEFAULT_DATA_DIR,
         help="Destination directory (default: %(default)s)",
     )
+    parser.add_argument(
+        "--fits",
+        action="store_true",
+        default=False,
+        help="Also download Wishart process fit pkl files (main + bootstrap)",
+    )
     args = parser.parse_args()
 
     data_dir: Path = args.data_dir
@@ -175,6 +228,10 @@ def main() -> None:
 
     print("\n--- Threshold ellipses ---")
     download_thres_ellipses(root_items, data_dir, args.subjects)
+
+    if args.fits:
+        print("\n--- Wishart process fit pkl files ---")
+        download_fit_pkls(root_items, data_dir, args.subjects)
 
     print("\nDone.")
 

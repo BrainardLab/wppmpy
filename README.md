@@ -67,7 +67,7 @@ To also run the Hong et al. (2025) notebooks, install the notebook dependencies 
 pip install -e ".[notebooks]"
 ```
 
-Then download the required data subset from OSF once:
+Then download the required data subset from OSF once (saved to `data/hong_etal_2025/`):
 
 ```bash
 python src/hong_etal_2025/download_data.py

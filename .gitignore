@@ -20,5 +20,5 @@ build/
 *.pyc
 .DS_Store
 
-# Downloaded datasets — fetch via src/hong_etal_2025/download_data.py
+# Downloaded datasets — each study gets its own subfolder, e.g. data/hong_etal_2025/
 data/

@@ -63,18 +63,9 @@ The WPPM was fit to color discrimination data from eight participants and used t
 | **Run interactively in your browser** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/BrainardLab/wppmpy/blob/main/src/hong_etal_2025/ellipses_from_tables.ipynb) |
 | **View as a static page** | [![nbviewer](https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.svg)](https://nbviewer.org/github/BrainardLab/wppmpy/blob/main/src/hong_etal_2025/ellipses_from_tables.ipynb) |
 
-### Threshold ellipses from Wishart process fit parameters (Hong et al. 2025, Figure 2C)
+---
 
-Reproduces Figure 2C again, this time by loading the fitted WPPM object directly from its pickle file rather than reading pre-tabulated CSV matrices.  The notebook demonstrates the full model-evaluation pipeline: estimated Chebyshev basis weights `W_est` are evaluated at each grid point to produce the noise covariance field $\Sigma_\mathrm{noise}(x)$, and the pre-stored threshold covariances $\Sigma_\mathrm{thres}$ are extracted from the pkl.  The 95 % bootstrap CI bands are computed from 120 bootstrap fit objects using the same radial-envelope method.
-
-**Data:** download the fit pkl files in addition to the CSV tables: `python src/hong_etal_2025/download_data.py --fits`.
-
-| | |
-|---|---|
-| **Run interactively in your browser** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/BrainardLab/wppmpy/blob/main/src/hong_etal_2025/ellipses_from_fits.ipynb) |
-| **View as a static page** | [![nbviewer](https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.svg)](https://nbviewer.org/github/BrainardLab/wppmpy/blob/main/src/hong_etal_2025/ellipses_from_fits.ipynb) |
-
-More Hong et al. (2025) notebook examples: [**wiki →**](https://github.com/BrainardLab/wppmpy/wiki/Hong-et-al-2025-Notebooks)
+> **More Hong et al. (2025) notebook examples** — including notebooks that are best run locally from the cloned repository — are listed on the [**Hong et al. (2025) notebooks wiki page**](https://github.com/BrainardLab/wppmpy/wiki/Hong-et-al-2025-Notebooks), along with static previews of each.
 
 ---
 

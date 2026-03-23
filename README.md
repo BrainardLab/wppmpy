@@ -65,15 +65,21 @@ The WPPM was fit to color discrimination data from eight participants and used t
 
 ---
 
-> **More Hong et al. (2025) notebook examples** — including notebooks that are best run locally from the cloned repository — are listed on the [**Hong et al. (2025) notebooks wiki page**](https://github.com/BrainardLab/wppmpy/wiki/Hong-et-al-2025-Notebooks), along with static previews of each.
+### More Hong et al. (2025) notebook examples
+
+Additional notebooks — including ones best run locally from the cloned repository — are listed on the [**Hong et al. (2025) notebooks wiki page**](https://github.com/BrainardLab/wppmpy/wiki/Hong-et-al-2025-Notebooks), along with static previews of each.
 
 ---
 
 ## Repository layout
 
 ```
+toolbox/                          # reusable Python modules
+  basis_posterior/                # Bayesian posterior for finite basis models
+
 src/
   example_finitebasis_gaussian/   # introductory Bayesian inference notebook
+    example_finitebasis_gaussian.ipynb
   hong_etal_2025/                 # notebooks and data download for Hong et al. (2025)
     download_data.py              # fetch required OSF data subset
     ellipses_from_tables.ipynb    # reproduce Figure 2C from pre-computed CSV tables

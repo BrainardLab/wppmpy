@@ -18,6 +18,8 @@ These will be developed and added over time.
 
 ## Installation
 
+### Basic install (toolbox only — no JAX required)
+
 ```bash
 git clone https://github.com/BrainardLab/wppmpy.git
 cd wppmpy
@@ -27,22 +29,50 @@ source .venv/bin/activate      # macOS / Linux
 pip install -e .
 ```
 
-To also run the Hong et al. (2025) notebooks, install the notebook dependencies (this pulls in the paper repository and all its requirements, including JAX, automatically):
+### With Hong et al. (2025) notebooks
+
+The notebooks require the paper repository and its dependencies (JAX, pandas, scipy, etc.).  Run this instead of (or in place of) `pip install -e .` above:
 
 ```bash
 pip install -e ".[notebooks]"
 ```
 
-If you have a local clone of `ellipsoids_eLife2025` and want to use that instead of the GitHub copy, install from its `ellipsoids/` subdirectory (where the package's `pyproject.toml` lives):
-
-```bash
-pip install -e /path/to/ellipsoids_eLife2025/ellipsoids
-```
+JAX (CPU build) is pulled in automatically.  For GPU acceleration see the note below.
 
 Then download the required data subset from OSF once (saved to `data/hong_etal_2025/`):
 
 ```bash
 python src/hong_etal_2025/download_data.py
+```
+
+### GPU acceleration (optional)
+
+**NVIDIA GPU (CUDA 12):**
+```bash
+pip install "jax[cuda12]"
+```
+Run this after `pip install -e ".[notebooks]"` to replace the CPU JAX build.
+
+**Apple Silicon (M1/M2/M3/M4):** GPU acceleration is not available for this
+codebase.  The code requires 64-bit floating point
+(`jax_enable_x64 = True`), which the Apple Metal JAX plugin (`jax-metal`)
+does not support.  CPU-only performance on Apple Silicon is still very good.
+
+### Future sessions
+
+Each time you open a new terminal, activate the environment before running code:
+
+```bash
+source .venv/bin/activate      # macOS / Linux
+# .venv\Scripts\activate       # Windows
+```
+
+### Using a local clone of ellipsoids_eLife2025
+
+If you have a local clone and want to use it instead of the GitHub copy:
+
+```bash
+pip install -e /path/to/ellipsoids_eLife2025/ellipsoids
 ```
 
 ---

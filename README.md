@@ -33,6 +33,12 @@ To also run the Hong et al. (2025) notebooks, install the notebook dependencies 
 pip install -e ".[notebooks]"
 ```
 
+If you have a local clone of `ellipsoids_eLife2025` and want to use that instead of the GitHub copy, install from its `ellipsoids/` subdirectory (where the package's `pyproject.toml` lives):
+
+```bash
+pip install -e /path/to/ellipsoids_eLife2025/ellipsoids
+```
+
 Then download the required data subset from OSF once (saved to `data/hong_etal_2025/`):
 
 ```bash

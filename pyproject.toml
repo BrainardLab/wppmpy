@@ -16,7 +16,7 @@ dependencies = [
 # JAX note: this installs the CPU-only build.  For GPU support install
 # jax[cuda12] separately; see https://jax.readthedocs.io/en/latest/installation.html
 notebooks = [
-    "ellipsoids-elife2025 @ git+https://github.com/fh862/ellipsoids_eLife2025.git",
+    "ellipsoids-elife2025 @ git+https://github.com/fh862/ellipsoids_eLife2025.git#subdirectory=ellipsoids",
     "pandas",
     "jupyter",
 ]

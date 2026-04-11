@@ -1,6 +1,6 @@
 # wppmpy
 
-Python code accompanying the **Wishart Process Psychophysical Model (WPPM)** — a Bayesian semi-parametric model that characterises how internal perceptual noise varies continuously across color space.
+Python code accompanying the **Wishart Process Psychophysical Model (WPPM)** — a Bayesian semi-parametric model that characterises how internal perceptual noise varies continuously across color space.  This builds upon the public respository for the paper, providing additonal code.  See installation instructions below.
 
 Background on the model and related experimental data are described in:
 
@@ -29,9 +29,9 @@ source .venv/bin/activate      # macOS / Linux
 pip install -e .
 ```
 
-### With Hong et al. (2025) notebooks
+### With notebooks
 
-The notebooks require the paper repository and its dependencies (JAX, pandas, scipy, etc.).  Run this instead of (or in place of) `pip install -e .` above:
+The notebooks in this repo require the paper repository and its dependencies (JAX, pandas, scipy, etc.).  Run this instead of (or in place of) `pip install -e .` above:
 
 ```bash
 pip install -e ".[notebooks]"
@@ -56,7 +56,7 @@ Run this after `pip install -e ".[notebooks]"` to replace the CPU JAX build.
 **Apple Silicon (M1/M2/M3/M4):** GPU acceleration is not available for this
 codebase.  The code requires 64-bit floating point
 (`jax_enable_x64 = True`), which the Apple Metal JAX plugin (`jax-metal`)
-does not support.  CPU-only performance on Apple Silicon is still very good.
+does not support.  CPU-only performance on Apple Silicon is still good.
 
 ### Future sessions
 

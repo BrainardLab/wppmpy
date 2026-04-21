@@ -42,7 +42,6 @@ Then edit `local_config.json`:
 
 ```json
 {
-    "ellipsoids_repo_path": "/path/to/ellipsoids_eLife2025/ellipsoids",
     "network_disk_path":    "/path/to/shared/network/disk",
     "stim_at_thres_path":   "/path/to/Stim_at_thres_for_image_generation_subN.pkl",
     "color_thres_base_dir": "/path/to/color/threshold/data",
@@ -52,7 +51,6 @@ Then edit `local_config.json`:
 
 | Field | Description |
 |---|---|
-| `ellipsoids_repo_path` | Absolute path to the `ellipsoids/` subdirectory inside your local clone of `ellipsoids_eLife2025` |
 | `network_disk_path` | Root of the shared network disk where session files are written |
 | `stim_at_thres_path` | Path to the subject-specific `Stim_at_thres_for_image_generation_subN.pkl` file |
 | `color_thres_base_dir` | Directory containing color threshold data and calibration files |

@@ -10,7 +10,6 @@ Created on Tue Jan  7 21:57:13 2025
 import os
 import pickle
 import random
-import sys
 
 import numpy as np
 from aepsych_dconfig import ExptConfig, MachineConfig
@@ -18,7 +17,6 @@ from aepsych_dconfig import ExptConfig, MachineConfig
 machine = MachineConfig.from_json()
 expt = ExptConfig.isoluminant_4d()
 
-sys.path.append(machine.ellipsoids_repo_path)
 from analysis.utils_communication import (  # noqa: E402
     CommunicateViaTextFile,
     ExperimentFileManager,

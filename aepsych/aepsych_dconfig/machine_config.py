@@ -5,7 +5,6 @@ from dataclasses import dataclass
 
 @dataclass
 class MachineConfig:
-    ellipsoids_repo_path: str
     network_disk_path: str
     stim_at_thres_path: str
     color_thres_base_dir: str

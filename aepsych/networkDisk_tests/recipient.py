@@ -11,7 +11,6 @@ import jax
 
 jax.config.update("jax_enable_x64", True)
 import os  # noqa: E402
-import sys  # noqa: E402
 import time  # noqa: E402
 
 from aepsych_dconfig import ExptConfig, MachineConfig  # noqa: E402
@@ -19,7 +18,6 @@ from aepsych_dconfig import ExptConfig, MachineConfig  # noqa: E402
 machine = MachineConfig.from_json()
 expt = ExptConfig.isoluminant_4d()
 
-sys.path.append(machine.ellipsoids_repo_path)
 from analysis.color_thres import color_thresholds  # noqa: E402
 from analysis.utils_communication import (  # noqa: E402
     CommunicateViaTextFile,

@@ -3,22 +3,23 @@ Created on Tue Jan  7 23:45:21 2025
 
 @author: brainardlab-adm
 """
+# Machine-specific paths are read from local_config.json at the aepsych/ root.
+# That file is gitignored. Copy local_config.json.template to local_config.json
+# and fill in paths for your machine before running.
 
 import jax
 
 jax.config.update("jax_enable_x64", True)
-import json  # noqa: E402
 import os  # noqa: E402
 import sys  # noqa: E402
 import time  # noqa: E402
 
-_config_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "local_config.json"
-)
-with open(_config_path) as _f:
-    _config = json.load(_f)
+from dconfig import ExptConfig, MachineConfig  # noqa: E402
 
-sys.path.append(_config["ellipsoids_repo_path"])
+machine = MachineConfig.from_json()
+expt = ExptConfig.isoluminant_4d()
+
+sys.path.append(machine.ellipsoids_repo_path)
 from analysis.color_thres import color_thresholds  # noqa: E402
 from analysis.utils_communication import (  # noqa: E402
     CommunicateViaTextFile,
@@ -26,9 +27,9 @@ from analysis.utils_communication import (  # noqa: E402
     get_experiment_info_custom,
 )
 
-# add color thres data
-baseDir = _config["color_thres_base_dir"]
-color_thres_data = color_thresholds(2, baseDir, plane_2D="Isoluminant plane")
+color_thres_data = color_thresholds(
+    expt.stim_dims, machine.color_thres_base_dir, plane_2D=expt.plane_2D
+)
 # load transformation matrices
 color_thres_data.load_transformation_matrix()
 # Load Wishart model fits
@@ -45,18 +46,12 @@ subject_id, subject_init, session_today = get_experiment_info_custom()
 # %%
 is_practice = True
 if is_practice:
-    # Define the shared network path specific to the subject
     networkDisk_path = os.path.join(
-        _config["network_disk_path"], f"sub{subject_id}", "practice"
+        machine.network_disk_path, f"sub{subject_id}", "practice"
     )
-
-    # Metadata pickle file for this subject
     expt_info = f"sub{subject_id}_{subject_init}_expt_record_practice.pkl"
 else:
-    # Define the shared network path specific to the subject
-    networkDisk_path = os.path.join(_config["network_disk_path"], f"sub{subject_id}")
-
-    # Metadata pickle file for this subject
+    networkDisk_path = os.path.join(machine.network_disk_path, f"sub{subject_id}")
     expt_info = f"sub{subject_id}_{subject_init}_expt_record.pkl"
 
 # Construct the full path to the pickle file

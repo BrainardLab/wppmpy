@@ -13,7 +13,7 @@ import random
 import sys
 
 import numpy as np
-from dconfig import ExptConfig, MachineConfig
+from aepsych_dconfig import ExptConfig, MachineConfig
 
 machine = MachineConfig.from_json()
 expt = ExptConfig.isoluminant_4d()

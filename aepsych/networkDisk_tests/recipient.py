@@ -14,7 +14,7 @@ import os  # noqa: E402
 import sys  # noqa: E402
 import time  # noqa: E402
 
-from dconfig import ExptConfig, MachineConfig  # noqa: E402
+from aepsych_dconfig import ExptConfig, MachineConfig  # noqa: E402
 
 machine = MachineConfig.from_json()
 expt = ExptConfig.isoluminant_4d()

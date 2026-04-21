@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from dconfig.config_pregenSobol import PregenSobolConfig
+from aepsych_dconfig.config_pregenSobol import PregenSobolConfig
 
 
 @dataclass

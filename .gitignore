@@ -20,5 +20,8 @@ build/
 *.pyc
 .DS_Store
 
+# Local machine configuration (copy local_config.json.template -> local_config.json and fill in)
+local_config.json
+
 # Downloaded datasets — each study gets its own subfolder, e.g. data/hong_etal_2025/
 data/

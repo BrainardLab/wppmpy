@@ -20,12 +20,11 @@ machine = MachineConfig.from_json()
 from analysis.utils_communication import (  # noqa: E402
     CommunicateViaTextFile,
     ExperimentFileManager,
-    get_experiment_info_custom,
 )
 
-# Prompt the user to enter experiment information using a custom Tkinter popup
-# Collects subject ID, initials, and today's session number
-subject_id, subject_init, session_today = get_experiment_info_custom()
+subject_id = int(input("Subject ID: "))
+subject_init = input("Subject initials: ").strip()
+session_today = int(input("Session number today: "))
 
 # %%
 networkDisk_path = os.path.join(machine.network_disk_path, f"sub{subject_id}")

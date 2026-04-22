@@ -123,6 +123,10 @@ fprintf('Communication complete.\n');
 
 function last_line = getLastLine(file_path)
     fid = fopen(file_path, 'r');
+    if fid == -1
+        last_line = '';   % file locked (e.g. mid-sync); caller will retry
+        return;
+    end
     last_line = '';
     while ~feof(fid)
         line = fgetl(fid);

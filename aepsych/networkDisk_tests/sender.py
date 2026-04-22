@@ -19,12 +19,12 @@ machine = MachineConfig.from_json()
 from analysis.utils_communication import (  # noqa: E402
     CommunicateViaTextFile,
     ExperimentFileManager,
-    get_comment_after_session,
-    get_experiment_info_custom,
 )
 
 # %% Prompt the user for experiment information
-subject_id, subject_init, session_today = get_experiment_info_custom()
+subject_id = int(input("Subject ID: "))
+subject_init = input("Subject initials: ").strip()
+session_today = int(input("Session number today: "))
 
 # Define the main shared network disk path where files will be stored
 networkDisk_path = machine.network_disk_path
@@ -87,4 +87,4 @@ communicator.finalize()
 print("Communication finalized.")
 expt_file_manager.status_updates("Done")
 
-expt_file_manager.add_comments(get_comment_after_session())
+expt_file_manager.add_comments(input("Comments (press Enter to skip): ").strip())

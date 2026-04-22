@@ -12,7 +12,7 @@
 %{
     % Set preferences before running, e.g.:
     setpref('wppm', 'color_thres_base_dir', '/Users/dhb/Dropbox (Personal)/ShareWithX/ShareWithWPPM/TestCommuniation');
-    setpref('wppm', 'network_disk_path',    '/Users/dhb/Dropbox (Personal)/ShareWithX/ShareWithWPPM/TestData');
+    setpref('wppm', 'network_disk_path',    '/Users/dhb/Dropbox (Personal)/ShareWithX/ShareWithWPPM/TestCommunication');
 %}
 
 %% Paths from preferences

@@ -41,25 +41,27 @@ subject_id    = str2double(dlg_answer{1});
 subject_init  = strtrim(dlg_answer{2});
 session_today = str2double(dlg_answer{3});
 
-%% Locate subject directory and session file
-is_practice = true;
-if is_practice
-    path_sub = fullfile(network_disk_path, sprintf('sub%d', subject_id), 'practice');
-else
-    path_sub = fullfile(network_disk_path, sprintf('sub%d', subject_id));
-end
+%% Wait for sender to create the session file
+path_sub = fullfile(network_disk_path, sprintf('sub%d', subject_id));
+pat      = sprintf('sub%d_%s*session*.txt', subject_id, subject_init);
 
-pat   = sprintf('sub%d_%s*session*.txt', subject_id, subject_init);
-files = dir(fullfile(path_sub, pat));
-if isempty(files)
-    error('No session file found in %s matching %s', path_sub, pat);
+fprintf('Waiting for session file in %s matching %s ...\n', path_sub, pat);
+wait_timeout = 120;   % seconds to wait for sender to create the file
+t_wait = tic;
+while true
+    files = dir(fullfile(path_sub, pat));
+    if ~isempty(files)
+        break;
+    end
+    if toc(t_wait) > wait_timeout
+        error('Timed out waiting for session file in %s matching %s', path_sub, pat);
+    end
+    pause(0.5);
 end
 [~, idx]       = max([files.datenum]);
 file_name      = files(idx).name;
 full_file_path = fullfile(path_sub, file_name);
-
-validateSessionFile(full_file_path, subject_init, session_today);
-fprintf('Using session file: %s\n', file_name);
+fprintf('Found session file: %s\n', file_name);
 
 %% Communication parameters
 retry_delay    = 1/60;   % ~16.7 ms (one 60 Hz frame)
@@ -195,32 +197,5 @@ function rgb = parseRGB(line, pat)
         rgb = [];
     else
         rgb = [str2double(tok{1}), str2double(tok{2}), str2double(tok{3})];
-    end
-end
-
-function validateSessionFile(file_path, subject_init, session_today)
-    fid = fopen(file_path, 'r');
-    if fid == -1
-        error('Cannot open session file: %s', file_path);
-    end
-    found_init    = '';
-    found_session = NaN;
-    for i = 1:4
-        line = fgetl(fid);
-        if ~ischar(line), break; end
-        if startsWith(line, 'Subject initial:')
-            found_init = strtrim(extractAfter(line, ':'));
-        elseif startsWith(line, 'Session:')
-            found_session = str2double(strtrim(extractAfter(line, ':')));
-        end
-    end
-    fclose(fid);
-    if ~strcmp(found_init, subject_init)
-        error('Subject initials mismatch: file has "%s", entered "%s".', ...
-            found_init, subject_init);
-    end
-    if found_session ~= session_today
-        error('Session number mismatch: file has %d, entered %d.', ...
-            found_session, session_today);
     end
 end

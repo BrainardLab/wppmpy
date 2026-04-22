@@ -16,7 +16,22 @@ These will be developed and added over time.
 
 ---
 
-## Installation
+## Two environments
+
+This repository contains two independent Python environments:
+
+| Environment | Purpose | Location |
+|---|---|---|
+| **Analysis** | Notebooks, toolbox, data exploration | repo root (`.venv/`) |
+| **Experiment / simulation** | AEPsych-based color discrimination experiments | `aepsych/` (separate venv) |
+
+Most users will only need the analysis environment.  The experiment environment
+is for running or simulating psychophysical experiments using the AEPsych
+adaptive sampling framework.
+
+---
+
+## Installation — analysis environment
 
 ### Basic install (toolbox only — no JAX required)
 
@@ -77,6 +92,26 @@ pip install -e /path/to/ellipsoids_eLife2025/ellipsoids
 
 ---
 
+## Installation — experiment / simulation environment
+
+See **[aepsych/README.md](aepsych/README.md)** for full instructions.
+
+In brief:
+
+```bash
+cd aepsych
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+```
+
+This installs the `wppmpy-aepsych` package, including `aepsych==0.7.3` and the
+`ellipsoids-elife2025` paper code (fetched automatically from GitHub).
+Machine-specific paths (network disk, stimulus files) are configured via
+`aepsych/local_config.json` (gitignored; copy from `local_config.json.template`).
+
+---
+
 ## Examples
 
 ### Bayesian inference with a finite sinusoidal basis
@@ -110,7 +145,7 @@ Additional notebooks — including ones best run locally from the cloned reposit
 ## Repository layout
 
 ```
-toolbox/                          # reusable Python modules
+toolbox/                          # reusable Python modules (analysis environment)
   basis_posterior/                # Bayesian posterior for finite basis models
 
 src/
@@ -120,6 +155,20 @@ src/
     download_data.py              # fetch required OSF data subset
     ellipses_from_tables.ipynb    # reproduce Figure 2C from pre-computed CSV tables
     ellipses_from_fits.ipynb      # reproduce Figure 2C from pkl fit parameters
+
+data/
+  hong_etal_2025/                 # OSF data downloaded by download_data.py
+
+tests/                            # pytest test suite for the toolbox
+
+aepsych/                          # experiment / simulation environment (separate venv)
+  README.md                       # full install and usage instructions
+  pyproject.toml                  # installs wppmpy-aepsych package
+  local_config.json.template      # copy to local_config.json and fill in paths
+  aepsych_dconfig/                # config package: MachineConfig, ExptConfig
+  networkDisk_tests/              # sender/recipient test scripts (Python + MATLAB)
+  expt/                           # placeholder for experiment scripts
+  sim/                            # placeholder for simulation scripts
 ```
 
 ---

@@ -11,6 +11,10 @@
     setpref('wppm', 'network_disk_path', '/Users/dhb/Dropbox (Personal)/ShareWithX/ShareWithWPPM/TestCommunication');
 %}
 
+%% Add communication class to path
+here = fileparts(mfilename('fullpath'));
+addpath(fullfile(here, '..', 'communication'));
+
 %% Path from preferences
 network_disk_path = getpref('wppm', 'network_disk_path');
 
@@ -27,155 +31,22 @@ session_today = str2double(dlg_answer{3});
 
 %% Wait for sender to create the session file
 path_sub = fullfile(network_disk_path, sprintf('sub%d', subject_id));
-pat = sprintf('sub%d_%s*session*.txt', subject_id, subject_init);
+pat      = sprintf('sub%d_%s*session%d*.txt', subject_id, subject_init, session_today);
 
-fprintf('Waiting for session file in %s matching %s ...\n', path_sub, pat);
-wait_timeout = 120;   % seconds to wait for sender to create the file
-t_wait = tic;
-while true
-    files = dir(fullfile(path_sub, pat));
-    if ~isempty(files)
-        break;
-    end
-    if toc(t_wait) > wait_timeout
-        error('Timed out waiting for session file in %s matching %s', path_sub, pat);
-    end
-    pause(0.5);
-end
-[~, idx]       = max([files.datenum]);
-file_name      = files(idx).name;
-full_file_path = fullfile(path_sub, file_name);
-fprintf('Found session file: %s\n', file_name);
+full_file_path = WPPMCommunicator.waitForSessionFile(path_sub, pat);
 
-%% Communication parameters
-retry_delay    = 1/60;   % ~16.7 ms (one 60 Hz frame)
-timeout        = 1200;   % 20 minutes
-response_delay = 0.1;    % seconds before sending simulated response
+%% Run communication
+comm = WPPMCommunicator(full_file_path);
 
-%% Step 1: Wait for "Set_Up_to_Communicate"
 fprintf('Waiting for initialization command...\n');
-t_start = tic;
-while true
-    if strcmp(getLastWord(full_file_path), 'Set_Up_to_Communicate')
-        appendToFile(full_file_path, 'Ready_To_Communicate');
-        break;
-    end
-    if toc(t_start) > timeout
-        error('Timeout: did not receive Set_Up_to_Communicate.');
-    end
-    pause(retry_delay);
-end
+comm.confirmCommunication();
 fprintf('Initialization confirmed.\n');
 
-%% Step 2: Main trial loop
-terminate     = false;
 trial_counter = 0;
-t_start       = tic;
-
-while ~terminate
-    last_line = getLastLine(full_file_path);
-    last_word = getLastWordFromLine(last_line);
-
-    if strcmp(last_word, 'Done')
-        terminate = true;
-
-    elseif strcmp(last_word, 'Break')
-        pause(1);
-        appendToFile(full_file_path, 'Resume');
-        t_start = tic;
-
-    elseif strcmp(last_word, 'Image_Display')
-        trial_counter = trial_counter + 1;
-        fprintf('Trial #%d...\n', trial_counter);
-
-        [trial_type, ref_rgb, comp_rgb, comp2_rgb] = extractRGBvals(last_line);
-        pause(response_delay);
-
-        response = randi([0 1]);   % random; replace with Wishart prediction if needed
-
-        if isempty(comp2_rgb)
-            str_comp2 = '';
-        else
-            str_comp2 = sprintf('Comp2_R%.8f_G%.8f_B%.8f ', ...
-                comp2_rgb(1), comp2_rgb(2), comp2_rgb(3));
-        end
-        msg = sprintf( ...
-            '%s Ref_R%.8f_G%.8f_B%.8f Comp_R%.8f_G%.8f_B%.8f %sResp%d Image_Confirmed', ...
-            trial_type, ...
-            ref_rgb(1),  ref_rgb(2),  ref_rgb(3), ...
-            comp_rgb(1), comp_rgb(2), comp_rgb(3), ...
-            str_comp2, response);
-        appendToFile(full_file_path, msg);
-        fprintf('RGB values confirmed (response = %d).\n', response);
-        t_start = tic;
-
-    else
-        if toc(t_start) > timeout
-            error('Timeout: sender did not send RGB values in time.');
-        end
-        pause(retry_delay);
-    end
+while ~comm.terminate
+    comm.confirmRGBvals(0.1);
+    trial_counter = trial_counter + 1;
+    fprintf('Trial #%d confirmed.\n', trial_counter);
 end
 
-fprintf('Communication complete.\n');
-
-%% ---- Helper functions -------------------------------------------------------
-
-function last_line = getLastLine(file_path)
-    fid = fopen(file_path, 'r');
-    if fid == -1
-        last_line = '';   % file locked (e.g. mid-sync); caller will retry
-        return;
-    end
-    last_line = '';
-    while ~feof(fid)
-        line = fgetl(fid);
-        if ischar(line) && ~isempty(strtrim(line))
-            last_line = strtrim(line);
-        end
-    end
-    fclose(fid);
-end
-
-function word = getLastWord(file_path)
-    word = getLastWordFromLine(getLastLine(file_path));
-end
-
-function word = getLastWordFromLine(line)
-    parts = strsplit(strtrim(line));
-    if isempty(parts) || isempty(parts{1})
-        word = '';
-    else
-        word = parts{end};
-    end
-end
-
-function appendToFile(file_path, message)
-    [~, hostname] = system('hostname');
-    hostname  = strtrim(hostname);
-    timestamp = datestr(now, 'yyyy-mm-dd HH:MM:SS');
-    fid = fopen(file_path, 'a');
-    if fid == -1
-        error('Cannot open file for appending: %s', file_path);
-    end
-    fprintf(fid, '%s - %s: %s\n', timestamp, hostname, message);
-    fclose(fid);
-end
-
-function [trial_type, ref_rgb, comp_rgb, comp2_rgb] = extractRGBvals(line)
-    parts      = strsplit(strtrim(line));
-    trial_type = parts{5};
-    re_rgb     = '([0-9.+\-]+)_G([0-9.+\-]+)_B([0-9.+\-]+)';
-    ref_rgb    = parseRGB(line, ['Ref_R'   re_rgb]);
-    comp_rgb   = parseRGB(line, ['Comp_R'  re_rgb]);   % won't match Comp2_R
-    comp2_rgb  = parseRGB(line, ['Comp2_R' re_rgb]);
-end
-
-function rgb = parseRGB(line, pat)
-    tok = regexp(line, pat, 'tokens', 'once');
-    if isempty(tok)
-        rgb = [];
-    else
-        rgb = [str2double(tok{1}), str2double(tok{2}), str2double(tok{3})];
-    end
-end
+fprintf('Communication complete (%d trials).\n', trial_counter);

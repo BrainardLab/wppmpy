@@ -38,6 +38,8 @@ aepsych/
   local_config.json.template
   README.md               # install + usage instructions
   aepsych_dconfig/        # MachineConfig, ExptConfig, PregenSobolConfig
+  communication/          # MATLAB communication class
+    WPPMCommunicator.m    # mirrors Python CommunicateViaTextFile
   expt/                   # placeholder for future experiment scripts
   sim/                    # placeholder for future simulation scripts
   networkDisk_tests/      # sender.py / recipient.py / recipient.m test scripts
@@ -76,8 +78,56 @@ pip install -e .
   local to avoid the namespace package conflict at import time.
 
 - **`local_config.json`** (gitignored) holds machine-specific paths:
-  `network_disk_path`, `stim_at_thres_path`, `color_thres_base_dir`,
-  `flag_load_rgb`.
+  `network_disk_path`, `stim_at_thres_path`, `flag_load_rgb`.
+  (`color_thres_base_dir` was removed — not needed by sender/recipient test scripts.)
+
+## networkDisk_tests/ — communication test scripts
+
+Tests the sender/recipient protocol without a live AEPsych server.
+
+- **`sender.py`** — Python sender. Prompts for subject ID/initials/session via
+  `input()`, creates a session file via `ExperimentFileManager`, then sends 10
+  random RGB trial pairs and finalises. Uses `network_disk_path` and
+  `flag_load_rgb` from `local_config.json` (`flag_load_rgb = false` for random
+  RGB; `stim_at_thres_path` only needed if `true`). Run as:
+  `.venv/bin/python networkDisk_tests/sender.py`
+
+- **`recipient.py`** — Python recipient stand-in. Prompts via `input()`, then
+  polls for the session file by glob pattern (includes session number to avoid
+  picking up stale files from earlier sessions). Uses `CommunicateViaTextFile`
+  from `ellipsoids-elife2025`.
+
+- **`recipient.m`** — MATLAB recipient stand-in. Uses `WPPMCommunicator` from
+  `aepsych/communication/`. Added to path via `addpath` relative to the script
+  location. Requires the `wppm.network_disk_path` MATLAB preference.
+
+### WPPMCommunicator (aepsych/communication/WPPMCommunicator.m)
+
+MATLAB class mirroring Python's `CommunicateViaTextFile`. Key interface:
+
+```matlab
+% Wait for session file to appear (static — call before constructing)
+fullPath = WPPMCommunicator.waitForSessionFile(pathSub, pattern);
+
+% Construct and run
+comm = WPPMCommunicator(fullPath);         % optional: retryDelay=, timeout=
+comm.confirmCommunication();               % handshake
+while ~comm.terminate
+    comm.confirmRGBvals(responseDelay);    % one trial; sets terminate on Done
+end
+```
+
+`appendMessage` and `parseTrialLine` are also public for use in experimental scripts.
+
+### Workflow
+
+1. Start `recipient.m` or `recipient.py` — they wait for the session file.
+2. Start `sender.py` — creates the session file, performs handshake, sends trials.
+3. Recipient responds to each trial with a random 0/1, confirms, and exits on `Done`.
+
+Both scripts look in `network_disk_path/sub{id}/` (no practice subdirectory).
+Session file glob includes session number (`*session{N}*`) to avoid matching
+stale files from prior sessions.
 
 ## Notebooks (src/hong_etal_2025/)
 

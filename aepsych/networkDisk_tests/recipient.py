@@ -17,52 +17,39 @@ from aepsych_dconfig import MachineConfig  # noqa: E402
 
 machine = MachineConfig.from_json()
 
+import glob  # noqa: E402
+
 from analysis.utils_communication import (  # noqa: E402
     CommunicateViaTextFile,
-    ExperimentFileManager,
 )
 
 subject_id = int(input("Subject ID: "))
 subject_init = input("Subject initials: ").strip()
 session_today = int(input("Session number today: "))
 
-# %%
-networkDisk_path = os.path.join(machine.network_disk_path, f"sub{subject_id}")
-expt_info = f"sub{subject_id}_{subject_init}_expt_record.pkl"
+# Wait for sender to create the session file
+path_sub = os.path.join(machine.network_disk_path, f"sub{subject_id}")
+pattern = os.path.join(
+    path_sub, f"sub{subject_id}_{subject_init}*session{session_today}*.txt"
+)
 
-# Construct the full path to the pickle file
-file_path = os.path.join(networkDisk_path, expt_info)
+wait_timeout = 120
+print(f"Waiting for session file matching {pattern} ...")
+t_start = time.time()
+while True:
+    matches = glob.glob(pattern)
+    if matches:
+        break
+    if time.time() - t_start > wait_timeout:
+        raise TimeoutError(f"Timed out waiting for session file matching {pattern}")
+    time.sleep(0.5)
 
-# Load the experiment file manager state from the pickle file
-expt_file_manager = ExperimentFileManager.load_state(file_path)
-
-# Retrieve the list of past session numbers
-past_session_keys = list(expt_file_manager.session_data.keys())
-past_session_num = [num for num in past_session_keys if isinstance(num, int)]
-
-# Find the most recent session number
-session_num = max(past_session_num)
-
-# Retrieve the file name of the most recent session
-file_name = expt_file_manager.session_data[session_num]["file_name"]
-
-# Validate the subject's initials and session number against the metadata
-if (expt_file_manager.session_data[session_num]["sub_initial"] != subject_init) or (
-    expt_file_manager.session_data[session_num]["session_number"] != session_today
-):
-    expected_init = expt_file_manager.session_data[session_num]["sub_initial"]
-    expected_sess = expt_file_manager.session_data[session_num]["session_number"]
-    raise ValueError(
-        f"Mismatch detected in metadata:\n"
-        f"- Expected Subject Initials: {expected_init}, "
-        f"but received: {subject_init}.\n"
-        f"- Expected Session Number: {expected_sess}, "
-        f"but received: {session_today}."
-    )
+file_name = os.path.basename(max(matches, key=os.path.getmtime))
+print(f"Found session file: {file_name}")
 
 # Initialize communication class
 communicator = CommunicateViaTextFile(
-    networkDisk_path,
+    path_sub,
     retry_delay=3 / 60,  # 1 frame
     timeout=1200,
 )  # 1200s = 20 mins

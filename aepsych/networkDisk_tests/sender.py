@@ -37,7 +37,7 @@ try:
     expt_file_manager = ExperimentFileManager.load_state(path_metadata)
 except Exception:
     expt_file_manager = ExperimentFileManager(
-        subject_id, subject_init, networkDisk_path
+        subject_id, subject_init, networkDisk_path, is_practice=False
     )
 file_path, file_name = expt_file_manager.create_session_file(session_today)
 expt_file_manager.list_files()

@@ -26,12 +26,7 @@ subject_init  = strtrim(dlg_answer{2});
 session_today = str2double(dlg_answer{3});
 
 %% Wait for sender to create the session file
-is_practice = true;   % must match sender.py / ExperimentFileManager behaviour
-if is_practice
-    path_sub = fullfile(network_disk_path, sprintf('sub%d', subject_id), 'practice');
-else
-    path_sub = fullfile(network_disk_path, sprintf('sub%d', subject_id));
-end
+path_sub = fullfile(network_disk_path, sprintf('sub%d', subject_id));
 pat = sprintf('sub%d_%s*session*.txt', subject_id, subject_init);
 
 fprintf('Waiting for session file in %s matching %s ...\n', path_sub, pat);

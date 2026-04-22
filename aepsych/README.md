@@ -83,7 +83,6 @@ Then edit `local_config.json`:
 {
     "network_disk_path":    "/path/to/shared/network/disk",
     "stim_at_thres_path":   "/path/to/Stim_at_thres_for_image_generation_subN.pkl",
-    "color_thres_base_dir": "/path/to/color/threshold/data",
     "flag_load_rgb":        false
 }
 ```
@@ -92,7 +91,6 @@ Then edit `local_config.json`:
 |---|---|
 | `network_disk_path` | Root of the shared network disk where session files are written |
 | `stim_at_thres_path` | Path to the subject-specific `Stim_at_thres_for_image_generation_subN.pkl` file |
-| `color_thres_base_dir` | Directory containing color threshold data and calibration files |
 | `flag_load_rgb` | `false` to generate random RGB values (testing); `true` to load from the pkl file |
 
 ---

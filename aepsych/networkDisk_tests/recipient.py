@@ -28,15 +28,8 @@ from analysis.utils_communication import (  # noqa: E402
 subject_id, subject_init, session_today = get_experiment_info_custom()
 
 # %%
-is_practice = True
-if is_practice:
-    networkDisk_path = os.path.join(
-        machine.network_disk_path, f"sub{subject_id}", "practice"
-    )
-    expt_info = f"sub{subject_id}_{subject_init}_expt_record_practice.pkl"
-else:
-    networkDisk_path = os.path.join(machine.network_disk_path, f"sub{subject_id}")
-    expt_info = f"sub{subject_id}_{subject_init}_expt_record.pkl"
+networkDisk_path = os.path.join(machine.network_disk_path, f"sub{subject_id}")
+expt_info = f"sub{subject_id}_{subject_init}_expt_record.pkl"
 
 # Construct the full path to the pickle file
 file_path = os.path.join(networkDisk_path, expt_info)

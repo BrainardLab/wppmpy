@@ -1,15 +1,18 @@
 % recipient.m
 % MATLAB test stand-in for recipient.py.
 %
-% Set preferences before running, see example below.
+% Set preferences before running, see example below.  These need to point
+% at a directory where the sender and this program will read and write
+% files (network_disk_path), and to a directory where there is some
+% sample data if we are using that mode.
 %
 % Responses are random (0 or 1).  M_RGBTo2DW is loaded and available in
 % the workspace if you want to add model-based predictions later.
 
 %{
     % Set preferences before running, e.g.:
-    setpref('wppm', 'color_thres_base_dir', '/Users/dhb/Desktop/TestComm');
-    setpref('wppm', 'network_disk_path',    '/Users/dhb/Desktop/NetDisk');
+    setpref('wppm', 'color_thres_base_dir', '/Users/dhb/Dropbox (Personal)/ShareWithX/ShareWithWPPM/TestCommuniation');
+    setpref('wppm', 'network_disk_path',    '/Users/dhb/Dropbox (Personal)/ShareWithX/ShareWithWPPM/TestData');
 %}
 
 %% Paths from preferences

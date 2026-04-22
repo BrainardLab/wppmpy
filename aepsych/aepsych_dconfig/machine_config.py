@@ -7,7 +7,6 @@ from dataclasses import dataclass
 class MachineConfig:
     network_disk_path: str
     stim_at_thres_path: str
-    color_thres_base_dir: str
     flag_load_rgb: bool
 
     @classmethod

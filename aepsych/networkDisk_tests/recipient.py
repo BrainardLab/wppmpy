@@ -13,29 +13,15 @@ jax.config.update("jax_enable_x64", True)
 import os  # noqa: E402
 import time  # noqa: E402
 
-from aepsych_dconfig import ExptConfig, MachineConfig  # noqa: E402
+from aepsych_dconfig import MachineConfig  # noqa: E402
 
 machine = MachineConfig.from_json()
-expt = ExptConfig.isoluminant_4d()
 
-from analysis.color_thres import color_thresholds  # noqa: E402
 from analysis.utils_communication import (  # noqa: E402
     CommunicateViaTextFile,
     ExperimentFileManager,
     get_experiment_info_custom,
 )
-
-color_thres_data = color_thresholds(
-    expt.stim_dims, machine.color_thres_base_dir, plane_2D=expt.plane_2D
-)
-# load transformation matrices
-color_thres_data.load_transformation_matrix()
-# Load Wishart model fits
-color_alg = "CIE1994"
-color_thres_data.load_CIE_data(CIE_version=color_alg)
-# Retrieve specific data from Wishart_data
-color_thres_data.load_model_fits(CIE_version=color_alg)
-gt_Wishart = color_thres_data.get_data("model_pred_Wishart", dataset="Wishart_data")
 
 # Prompt the user to enter experiment information using a custom Tkinter popup
 # Collects subject ID, initials, and today's session number
@@ -101,7 +87,7 @@ while True:
     if communicator.terminate:
         break
     print(f"Trial #{trial_counter}...")
-    communicator.confirm_RGBvals(gt_Wishart, color_thres_data, response_delay=0.1)
+    communicator.confirm_RGBvals(response_delay=0.1)
     trial_counter += 1
     time.sleep(0.01)
     print("RGB values confirmed.")

@@ -12,10 +12,9 @@ import pickle
 import random
 
 import numpy as np
-from aepsych_dconfig import ExptConfig, MachineConfig
+from aepsych_dconfig import MachineConfig
 
 machine = MachineConfig.from_json()
-expt = ExptConfig.isoluminant_4d()
 
 from analysis.utils_communication import (  # noqa: E402
     CommunicateViaTextFile,

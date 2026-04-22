@@ -1,34 +1,18 @@
 % recipient.m
 % MATLAB test stand-in for recipient.py.
 %
-% Set preferences before running, see example below.  These need to point
-% at a directory where the sender and this program will read and write
-% files (network_disk_path), and to a directory where there is some
-% sample data if we are using that mode.
+% Set the network_disk_path preference before running, e.g.:
+%   setpref('wppm', 'network_disk_path', '/path/to/shared/disk')
 %
-% Responses are random (0 or 1).  M_RGBTo2DW is loaded and available in
-% the workspace if you want to add model-based predictions later.
+% Responses are random (0 or 1).
 
 %{
-    % Set preferences before running, e.g.:
-    setpref('wppm', 'color_thres_base_dir', '/Users/dhb/Dropbox (Personal)/ShareWithX/ShareWithWPPM/TestCommuniation');
-    setpref('wppm', 'network_disk_path',    '/Users/dhb/Dropbox (Personal)/ShareWithX/ShareWithWPPM/TestCommunication');
+    % Set preference before running, e.g.:
+    setpref('wppm', 'network_disk_path', '/Users/dhb/Dropbox (Personal)/ShareWithX/ShareWithWPPM/TestCommunication');
 %}
 
-%% Paths from preferences
-color_thres_base_dir = getpref('wppm', 'color_thres_base_dir');
-network_disk_path    = getpref('wppm', 'network_disk_path');
-
-%% Load RGB->2DW transformation matrix
-cal_tag = 'DELL_02242025_copy';
-try
-    M_RGBTo2DW = loadMatrix(color_thres_base_dir, ...
-        sprintf('M_RGBTo2DW_%s.csv', cal_tag));
-    fprintf('Loaded M_RGBTo2DW.\n');
-catch
-    warning('M_RGBTo2DW_%s.csv not found; random responses will be used.', cal_tag);
-    M_RGBTo2DW = []; %#ok<NASGU>
-end
+%% Path from preferences
+network_disk_path = getpref('wppm', 'network_disk_path');
 
 %% Get experiment info
 dlg_answer = inputdlg( ...
@@ -141,14 +125,6 @@ end
 fprintf('Communication complete.\n');
 
 %% ---- Helper functions -------------------------------------------------------
-
-function M = loadMatrix(base_dir, filename)
-    files = dir(fullfile(base_dir, '**', filename));
-    if isempty(files)
-        error('File not found: %s under %s', filename, base_dir);
-    end
-    M = readmatrix(fullfile(files(1).folder, files(1).name), 'NumHeaderLines', 0);
-end
 
 function last_line = getLastLine(file_path)
     fid = fopen(file_path, 'r');

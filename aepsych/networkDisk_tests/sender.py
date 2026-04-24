@@ -1,14 +1,5 @@
-"""
-Created on Tue Jan  7 21:57:13 2025
-
-@author: brainardlab-adm
-"""
-# Machine-specific paths are read from local_config.json at the aepsych/ root.
-# That file is gitignored. Copy local_config.json.template to local_config.json
-# and fill in paths for your machine before running.
-
+import datetime
 import os
-import pickle
 import random
 
 import numpy as np
@@ -18,7 +9,6 @@ machine = MachineConfig.from_json()
 
 from analysis.utils_communication import (  # noqa: E402
     CommunicateViaTextFile,
-    ExperimentFileManager,
 )
 
 # %% Prompt the user for experiment information
@@ -26,53 +16,30 @@ subject_id = int(input("Subject ID: "))
 subject_init = input("Subject initials: ").strip()
 session_today = int(input("Session number today: "))
 
-# Define the main shared network disk path where files will be stored
-networkDisk_path = machine.network_disk_path
-path_sub = os.path.join(networkDisk_path, f"sub{subject_id}")
-
-# Attempt to load the experiment manager state from a pickle file
-try:
-    expt_info = f"sub{subject_id}_{subject_init}_expt_record.pkl"
-    path_metadata = os.path.join(path_sub, expt_info)
-    expt_file_manager = ExperimentFileManager.load_state(path_metadata)
-except Exception:
-    expt_file_manager = ExperimentFileManager(
-        subject_id, subject_init, networkDisk_path, is_practice=False
-    )
-file_path, file_name = expt_file_manager.create_session_file(session_today)
-expt_file_manager.list_files()
+# Create session directory and file
+path_sub = os.path.join(machine.network_disk_path, f"sub{subject_id}")
+os.makedirs(path_sub, exist_ok=True)
+timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+file_name = f"sub{subject_id}_{subject_init}_session{session_today}_{timestamp}.txt"
+open(os.path.join(path_sub, file_name), "w").close()
 
 # %% Initialize communication class
-communicator = CommunicateViaTextFile(expt_file_manager.path_sub)
+communicator = CommunicateViaTextFile(path_sub)
 communicator.check_and_handle_file(file_name)
 
 print("Initializing communication...")
 communicator.initialize_communication()
 print("Initialization complete.")
-expt_file_manager.status_updates("Confirmed")
 
-# %% Generate or load RGB values
-if not machine.flag_load_rgb:
-    # Step 2: Send 10 sets of RGB values
-    # Generate MOCS and AEPsych trial types
-    MOCS_trial_type = [f"MOCS_{i}" for i in range(1, 6)]
-    AEPsych_trial_type = [f"AEPsych_{i}" for i in range(1, 6)]
-    trial_type_both = MOCS_trial_type + AEPsych_trial_type
-    random.shuffle(trial_type_both)
-    trial_type_final = [
-        f"Trial_{i + 1}_{item}" for i, item in enumerate(trial_type_both)
-    ]
-    print(trial_type_final)
+# %% Generate random RGB values for 10 trials
+MOCS_trial_type = [f"MOCS_{i}" for i in range(1, 6)]
+AEPsych_trial_type = [f"AEPsych_{i}" for i in range(1, 6)]
+trial_type_both = MOCS_trial_type + AEPsych_trial_type
+random.shuffle(trial_type_both)
+trial_type_final = [f"Trial_{i + 1}_{item}" for i, item in enumerate(trial_type_both)]
 
-    ref_rgb_values = np.random.rand(10, 3)  # Generate 10 random RGB values
-    comp_rgb_values = np.random.rand(10, 3)
-else:
-    with open(machine.stim_at_thres_path, "rb") as f:
-        stim_at_thres_dict = pickle.load(f)
-    ref_rgb_values = stim_at_thres_dict["MOCS_trials_RGB"]["MOCS_xref_shuffled"]
-    comp_rgb_values = stim_at_thres_dict["MOCS_trials_RGB"]["MOCS_x1_shuffled"]
-
-    trial_type_final = [f"MOCS_{i}" for i in range(1, ref_rgb_values.shape[0] + 1)]
+ref_rgb_values = np.random.rand(10, 3)
+comp_rgb_values = np.random.rand(10, 3)
 
 # %% Send RGB values
 for i, (trial, ref_rgb, comp_rgb) in enumerate(
@@ -85,6 +52,3 @@ for i, (trial, ref_rgb, comp_rgb) in enumerate(
 print("Finalizing communication...")
 communicator.finalize()
 print("Communication finalized.")
-expt_file_manager.status_updates("Done")
-
-expt_file_manager.add_comments(input("Comments (press Enter to skip): ").strip())

@@ -6,8 +6,6 @@ from dataclasses import dataclass
 @dataclass
 class MachineConfig:
     network_disk_path: str
-    stim_at_thres_path: str
-    flag_load_rgb: bool
 
     @classmethod
     def from_json(cls, path: str | None = None) -> "MachineConfig":

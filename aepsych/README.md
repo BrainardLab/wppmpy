@@ -81,17 +81,13 @@ Then edit `local_config.json`:
 
 ```json
 {
-    "network_disk_path":    "/path/to/shared/network/disk",
-    "stim_at_thres_path":   "/path/to/Stim_at_thres_for_image_generation_subN.pkl",
-    "flag_load_rgb":        false
+    "network_disk_path": "/path/to/shared/network/disk"
 }
 ```
 
 | Field | Description |
 |---|---|
 | `network_disk_path` | Root of the shared network disk where session files are written |
-| `stim_at_thres_path` | Path to the subject-specific `Stim_at_thres_for_image_generation_subN.pkl` file |
-| `flag_load_rgb` | `false` to generate random RGB values (testing); `true` to load from the pkl file |
 
 ---
 
@@ -102,14 +98,13 @@ to a shared text file on the network disk. Start the recipient before the sender
 
 ### Step 1 — Configure MATLAB preferences
 
-In MATLAB, run once per machine (values persist across sessions):
+In MATLAB, run once per machine (value persists across sessions):
 
 ```matlab
-setpref('wppm', 'color_thres_base_dir', '/path/to/color/threshold/data');
-setpref('wppm', 'network_disk_path',    '/path/to/shared/network/disk');
+setpref('wppm', 'network_disk_path', '/path/to/shared/network/disk');
 ```
 
-Both paths must match the corresponding entries in `local_config.json`.
+This must match `network_disk_path` in `local_config.json`.
 
 ### Step 2 — Start recipient.m
 
@@ -126,8 +121,9 @@ cd /path/to/wppmpy/aepsych
 .venv/bin/python networkDisk_tests/sender.py
 ```
 
-A dialog will appear asking for the same subject ID, initials, and session
-number entered in MATLAB. The two scripts must agree on all three values.
+Enter the same subject ID, initials, and session number at the terminal
+prompts (unlike `recipient.m`, which uses a dialog). The two scripts must
+agree on all three values.
 
 ### What happens
 

@@ -1,5 +1,0 @@
-{
-    "network_disk_path":  "/path/to/shared/network/disk",
-    "stim_at_thres_path": "/path/to/Stim_at_thres_for_image_generation_subN.pkl",
-    "flag_load_rgb":      false
-}

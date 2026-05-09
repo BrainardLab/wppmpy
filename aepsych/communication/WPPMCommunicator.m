@@ -5,7 +5,19 @@ classdef WPPMCommunicator < handle
 % file on a network disk.  This mirrors the Python CommunicateViaTextFile
 % class in ellipsoids-elife2025/analysis/utils_communication.py.
 %
-% Recipient-side usage:
+% Recipient-side usage (production — separate receive and send):
+%
+%   fullPath = WPPMCommunicator.waitForSessionFile(pathSub, pattern);
+%   comm = WPPMCommunicator(fullPath);
+%   comm.confirmCommunication();
+%   while ~comm.terminate
+%       [trialType, refRGB, compRGB, comp2RGB] = comm.receiveStimuli();
+%       if comm.terminate, break; end
+%       response = <run experiment and get response>;
+%       comm.sendResponse(trialType, refRGB, compRGB, response, comp2RGB);
+%   end
+%
+% Recipient-side usage (test — random responses via confirmRGBvals):
 %
 %   fullPath = WPPMCommunicator.waitForSessionFile(pathSub, pattern);
 %   comm = WPPMCommunicator(fullPath);
@@ -57,12 +69,13 @@ classdef WPPMCommunicator < handle
         end
 
         % -------------------------------------------------------------- %
-        function confirmRGBvals(obj, responseDelay)
-        % confirmRGBvals  Handle one trial: wait for Image_Display, send Image_Confirmed.
+        function [trialType, refRGB, compRGB, comp2RGB] = receiveStimuli(obj)
+        % receiveStimuli  Wait for the next trial command from the conductor.
         %
-        %   Sets obj.terminate = true when the sender writes 'Done'.
-        %   responseDelay (optional, default 0.1 s) simulates response time.
-            if nargin < 2, responseDelay = 0.1; end
+        %   Returns trialType (char), refRGB (1x3), compRGB (1x3), comp2RGB (1x3 or []).
+        %   Sets obj.terminate = true and returns empty arrays if 'Done' received.
+        %   Handles 'Break' transparently (pauses, sends 'Resume', keeps polling).
+            trialType = '';  refRGB = [];  compRGB = [];  comp2RGB = [];
             t = tic;
             while true
                 lastLine = obj.lastLine();
@@ -80,23 +93,6 @@ classdef WPPMCommunicator < handle
                 elseif strcmp(lastWord, 'Image_Display')
                     [trialType, refRGB, compRGB, comp2RGB] = ...
                         WPPMCommunicator.parseTrialLine(lastLine);
-                    pause(responseDelay);
-
-                    response = randi([0 1]);
-
-                    if isempty(comp2RGB)
-                        comp2Str = '';
-                    else
-                        comp2Str = sprintf('Comp2_R%.8f_G%.8f_B%.8f ', ...
-                            comp2RGB(1), comp2RGB(2), comp2RGB(3));
-                    end
-                    msg = sprintf( ...
-                        '%s Ref_R%.8f_G%.8f_B%.8f Comp_R%.8f_G%.8f_B%.8f %sResp%d Image_Confirmed', ...
-                        trialType, ...
-                        refRGB(1),  refRGB(2),  refRGB(3), ...
-                        compRGB(1), compRGB(2), compRGB(3), ...
-                        comp2Str, response);
-                    obj.appendMessage(msg);
                     return;
 
                 else
@@ -107,6 +103,41 @@ classdef WPPMCommunicator < handle
                     pause(obj.retryDelay);
                 end
             end
+        end
+
+        % -------------------------------------------------------------- %
+        function sendResponse(obj, trialType, refRGB, compRGB, response, comp2RGB)
+        % sendResponse  Send Image_Confirmed with trial info and response to the conductor.
+        %
+        %   response: integer (0 or 1)
+        %   comp2RGB: (1x3) for suprathreshold trials, or [] for oddity trials
+            if nargin < 6 || isempty(comp2RGB)
+                comp2Str = '';
+            else
+                comp2Str = sprintf('Comp2_R%.8f_G%.8f_B%.8f ', ...
+                    comp2RGB(1), comp2RGB(2), comp2RGB(3));
+            end
+            msg = sprintf( ...
+                '%s Ref_R%.8f_G%.8f_B%.8f Comp_R%.8f_G%.8f_B%.8f %sResp%d Image_Confirmed', ...
+                trialType, ...
+                refRGB(1),  refRGB(2),  refRGB(3), ...
+                compRGB(1), compRGB(2), compRGB(3), ...
+                comp2Str, response);
+            obj.appendMessage(msg);
+        end
+
+        % -------------------------------------------------------------- %
+        function [trialType, refRGB, compRGB] = confirmRGBvals(obj, responseDelay)
+        % confirmRGBvals  Test method: receive stimuli, send random response.
+        %
+        %   Calls receiveStimuli and sendResponse with a random response in between.
+        %   Use receiveStimuli and sendResponse directly for production code.
+        %   Returns trialType (char), refRGB (1x3), compRGB (1x3); empty on termination.
+            if nargin < 2, responseDelay = 0.1; end
+            [trialType, refRGB, compRGB, comp2RGB] = obj.receiveStimuli();
+            if obj.terminate, return; end
+            pause(responseDelay);
+            obj.sendResponse(trialType, refRGB, compRGB, randi([0 1]), comp2RGB);
         end
 
         % -------------------------------------------------------------- %

@@ -12,10 +12,11 @@ import jax
 jax.config.update("jax_enable_x64", True)
 import os  # noqa: E402
 import time  # noqa: E402
+from pathlib import Path  # noqa: E402
 
 from aepsych_dconfig import MachineConfig  # noqa: E402
 
-machine = MachineConfig.from_json()
+machine = MachineConfig.from_json(Path(__file__))
 
 import glob  # noqa: E402
 

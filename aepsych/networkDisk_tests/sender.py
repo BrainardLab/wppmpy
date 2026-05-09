@@ -1,11 +1,12 @@
 import datetime
 import os
 import random
+from pathlib import Path
 
 import numpy as np
 from aepsych_dconfig import MachineConfig
 
-machine = MachineConfig.from_json()
+machine = MachineConfig.from_json(Path(__file__))
 
 from analysis.utils_communication import (  # noqa: E402
     CommunicateViaTextFile,

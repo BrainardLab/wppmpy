@@ -17,6 +17,12 @@ repos:
         additional_dependencies: [mypy==1.19.1]
 -   repo: local
     hooks:
+    -   id: check-machine-config-sync
+        name: machine_config.py in sync with wppmpy_private
+        language: system
+        entry: python3 .hooks/check_machine_config_sync.py
+        files: aepsych/aepsych_dconfig/machine_config\.py
+        pass_filenames: false
     -   id: pytest
         name: pytest
         entry: .venv/bin/pytest

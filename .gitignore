@@ -24,5 +24,8 @@ build/
 # Local machine configuration (copy local_config.json.template -> local_config.json and fill in)
 local_config.json
 
+# Local data and analysis outputs (machine-specific; .gitkeep files track dir structure)
+local/
+
 # Downloaded datasets — each study gets its own subfolder, e.g. data/hong_etal_2025/
 data/

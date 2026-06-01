@@ -34,21 +34,40 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-OSF_NODE = "k27js"
 OSF_API = "https://api.osf.io/v2"
 _SCRIPT_DIR = Path(__file__).parent
 _REPO_ROOT = _SCRIPT_DIR.parent.parent.parent
 
 
-def _default_data_dir() -> Path:
-    """Return data_dir from local_config.json if present, else within-repo default."""
+def _load_config() -> dict[str, Any]:
     cfg_path = _SCRIPT_DIR / "local_config.json"
-    if cfg_path.exists():
-        with open(cfg_path) as f:
-            cfg = json.load(f)
-        if "data_dir" in cfg:
-            return Path(cfg["data_dir"])
-    return _REPO_ROOT / "data" / "hong_etal_2025"
+    if not cfg_path.exists():
+        sys.exit(
+            f"No local_config.json found at {cfg_path}.\n"
+            "Copy local_config.json.template → local_config.json and fill in paths."
+        )
+    with open(cfg_path) as f:
+        return json.load(f)  # type: ignore[no-any-return]
+
+
+def _resolve(path_str: str, label: str) -> Path:
+    """Resolve an absolute or repo-relative path; fail clearly if empty."""
+    if not path_str:
+        sys.exit(
+            f"{label} must be set in local_config.json (see template). "
+            "Relative paths are resolved from the repo root."
+        )
+    p = Path(path_str)
+    return p if p.is_absolute() else (_REPO_ROOT / p).resolve()
+
+
+def _osf_node(cfg: dict[str, Any]) -> str:
+    """Return the OSF node ID from data_repo in config, falling back to the default."""
+    repo = str(cfg.get("data_repo", ""))
+    if repo:
+        # Accept full URL (https://osf.io/k27js) or bare node ID (k27js)
+        return repo.rstrip("/").split("/")[-1]
+    return "k27js"
 
 
 DEFAULT_SUBJECTS = [1]  # sub1 = subject CH
@@ -221,8 +240,7 @@ def main() -> None:
         "--data-dir",
         type=Path,
         default=None,
-        help="Destination directory (default: data_dir from local_config.json, "
-        "or data/hong_etal_2025/ within the repo if no config found)",
+        help="Override data_dir from local_config.json (for Colab or scripted use)",
     )
     parser.add_argument(
         "--fits",
@@ -232,11 +250,17 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    data_dir: Path = args.data_dir if args.data_dir is not None else _default_data_dir()
+    cfg = _load_config()
+    data_dir: Path = (
+        args.data_dir
+        if args.data_dir is not None
+        else _resolve(cfg.get("data_dir", ""), "data_dir")
+    )
     data_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"Fetching OSF node '{OSF_NODE}' → {data_dir}")
-    root_url = f"{OSF_API}/nodes/{OSF_NODE}/files/osfstorage/"
+    osf_node = _osf_node(cfg)
+    print(f"Fetching OSF node '{osf_node}' → {data_dir}")
+    root_url = f"{OSF_API}/nodes/{osf_node}/files/osfstorage/"
     root_items = _list_folder(root_url)
 
     print("\n--- Transformation matrices ---")

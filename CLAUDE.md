@@ -6,12 +6,14 @@
 wppmpy_public/
   toolbox/          # installed Python package (pip install -e .)
     basis_posterior/
-  src/              # notebooks and scripts
+  tutorial/         # introductory notebooks
     example_finitebasis_gaussian/
-    hong_etal_2025/
-      download_data.py
-      ellipses_from_tables.ipynb
-      ellipses_from_fits.ipynb
+  analysis/         # analysis notebooks and scripts
+    upenn/
+      hong_etal_2025/
+        download_data.py
+        ellipses_from_tables.ipynb
+        ellipses_from_fits.ipynb
   data/
     hong_etal_2025/ # OSF data downloaded by download_data.py
   tests/            # pytest suite for the toolbox
@@ -127,7 +129,7 @@ Both scripts look in `network_disk_path/sub{id}/` (no practice subdirectory).
 Session file glob includes session number (`*session{N}*`) to avoid matching
 stale files from prior sessions.
 
-## Notebooks (src/hong_etal_2025/)
+## Notebooks (analysis/upenn/hong_etal_2025/)
 
 - **`ellipses_from_tables.ipynb`** — reads `Sigmas_thres` directly from CSV;
   no pkl or JAX needed.

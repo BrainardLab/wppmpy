@@ -19,7 +19,8 @@ Files fetched (with --fits)
 
 Usage
 -----
-    python src/hong_etal_2025/download_data.py [--subjects 1 2 4 ...] [--fits]
+    python analysis/upenn/hong_etal_2025/download_data.py \
+        [--subjects 1 2 4 ...] [--fits]
 
 No third-party packages required — stdlib only.
 """

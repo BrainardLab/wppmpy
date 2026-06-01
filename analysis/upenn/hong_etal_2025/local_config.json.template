@@ -1,5 +1,5 @@
 {
-    "_comment": "Copy to local_config.json and set paths for this machine. Relative paths are resolved from the repo root. The defaults store data within the repo (git-ignored). data_dir and analysis_dir must be non-empty and different. data_repo is only read by download_data.py.",
+    "_comment": "Copy to local_config.json. The defaults store data/analysis within the repo under local/ (git-ignored). Change data_dir and analysis_dir to any absolute path on this machine if you prefer data elsewhere (e.g. a shared network drive). Relative paths are resolved from the repo root. Both must be non-empty and different. data_repo is only read by download_data.py.",
     "data_dir": "local/data/upenn/hong_etal_2025",
     "analysis_dir": "local/analysis/upenn/hong_etal_2025",
     "data_repo": "https://osf.io/k27js"

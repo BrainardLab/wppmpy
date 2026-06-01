@@ -1,5 +1,6 @@
 # Virtual environments
-.venv/
+analysis.venv/
+aepsych/aepsych.venv/
 venv/
 
 # Python bytecode

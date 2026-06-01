@@ -1,9 +1,9 @@
-# wppmpy — Claude Code context
+# wppmpy_public — Claude Code context
 
 ## Repo layout (actual)
 
 ```
-wppmpy/
+wppmpy_public/
   toolbox/          # installed Python package (pip install -e .)
     basis_posterior/
   src/              # notebooks and scripts
@@ -16,15 +16,15 @@ wppmpy/
     hong_etal_2025/ # OSF data downloaded by download_data.py
   tests/            # pytest suite for the toolbox
   aepsych/          # AEPsych experiment environment (separate venv)
-  .venv/            # root venv: pip install -e ".[notebooks]"
+  analysis.venv/    # root venv: pip install -e ".[notebooks]"
 ```
 
 ## Two environments
 
-| Environment | Location | Install |
+| Environment | Location | Activate |
 |---|---|---|
-| Analysis (notebooks, toolbox) | repo root `.venv/` | `pip install -e ".[notebooks]"` |
-| Experiment / simulation | `aepsych/.venv/` | `cd aepsych && pip install -e .` |
+| Analysis (notebooks, toolbox) | `analysis.venv/` | `source analysis.venv/bin/activate` |
+| Experiment / simulation | `aepsych/aepsych.venv/` | `source aepsych/aepsych.venv/bin/activate` |
 
 ## aepsych/ subdirectory
 
@@ -49,8 +49,8 @@ aepsych/
 
 ```bash
 cd aepsych
-python3 -m venv .venv
-source .venv/bin/activate
+python3 -m venv aepsych.venv
+source aepsych.venv/bin/activate
 pip install -e .
 ```
 
@@ -60,7 +60,7 @@ pip install -e .
 ### Run scripts
 
 ```bash
-.venv/bin/python networkDisk_tests/sender.py
+aepsych.venv/bin/python networkDisk_tests/sender.py
 ```
 
 ### Key design decisions
@@ -90,7 +90,7 @@ Tests the sender/recipient protocol without a live AEPsych server.
   random RGB trial pairs and finalises. Uses `network_disk_path` and
   `flag_load_rgb` from `local_config.json` (`flag_load_rgb = false` for random
   RGB; `stim_at_thres_path` only needed if `true`). Run as:
-  `.venv/bin/python networkDisk_tests/sender.py`
+  `aepsych.venv/bin/python networkDisk_tests/sender.py`
 
 - **`recipient.py`** — Python recipient stand-in. Prompts via `input()`, then
   polls for the session file by glob pattern (includes session number to avoid

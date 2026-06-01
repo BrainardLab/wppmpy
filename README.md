@@ -22,8 +22,8 @@ This repository contains two independent Python environments:
 
 | Environment | Purpose | Location |
 |---|---|---|
-| **Analysis** | Notebooks, toolbox, data exploration | repo root (`.venv/`) |
-| **Experiment / simulation** | AEPsych-based color discrimination experiments | `aepsych/` (separate venv) |
+| **Analysis** | Notebooks, toolbox, data exploration | repo root (`analysis.venv/`) |
+| **Experiment / simulation** | AEPsych-based color discrimination experiments | `aepsych/` (`aepsych/aepsych.venv/`) |
 
 Most users will only need the analysis environment.  The experiment environment
 is for running or simulating psychophysical experiments using the AEPsych
@@ -36,11 +36,11 @@ adaptive sampling framework.
 ### Basic install (toolbox only — no JAX required)
 
 ```bash
-git clone https://github.com/BrainardLab/wppmpy.git
-cd wppmpy
-python -m venv .venv
-source .venv/bin/activate      # macOS / Linux
-# .venv\Scripts\activate       # Windows
+git clone https://github.com/BrainardLab/wppmpy_public.git
+cd wppmpy_public
+python -m venv analysis.venv
+source analysis.venv/bin/activate      # macOS / Linux
+# analysis.venv\Scripts\activate       # Windows
 pip install -e .
 ```
 
@@ -78,8 +78,8 @@ does not support.  CPU-only performance on Apple Silicon is still good.
 Each time you open a new terminal, activate the environment before running code:
 
 ```bash
-source .venv/bin/activate      # macOS / Linux
-# .venv\Scripts\activate       # Windows
+source analysis.venv/bin/activate      # macOS / Linux
+# analysis.venv\Scripts\activate       # Windows
 ```
 
 ### Using a local clone of ellipsoids_eLife2025
@@ -100,8 +100,8 @@ In brief:
 
 ```bash
 cd aepsych
-python3 -m venv .venv
-source .venv/bin/activate
+python3 -m venv aepsych.venv
+source aepsych.venv/bin/activate
 pip install -e .
 ```
 
@@ -120,8 +120,8 @@ A key idea in the WPPM is that a smoothness prior is used to leverage data colle
 
 | | |
 |---|---|
-| **Run interactively in your browser** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/BrainardLab/wppmpy/blob/main/src/example_finitebasis_gaussian/example_finitebasis_gaussian.ipynb) |
-| **View as a static page** | [![nbviewer](https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.svg)](https://nbviewer.org/github/BrainardLab/wppmpy/blob/main/src/example_finitebasis_gaussian/example_finitebasis_gaussian.ipynb) |
+| **Run interactively in your browser** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/BrainardLab/wppmpy_public/blob/main/src/example_finitebasis_gaussian/example_finitebasis_gaussian.ipynb) |
+| **View as a static page** | [![nbviewer](https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.svg)](https://nbviewer.org/github/BrainardLab/wppmpy_public/blob/main/src/example_finitebasis_gaussian/example_finitebasis_gaussian.ipynb) |
 
 ### Threshold ellipses from pre-computed tables (Hong et al. 2025, Figure 2C)
 
@@ -131,14 +131,14 @@ The WPPM was fit to color discrimination data from eight participants and used t
 
 | | |
 |---|---|
-| **Run interactively in your browser** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/BrainardLab/wppmpy/blob/main/src/hong_etal_2025/ellipses_from_tables.ipynb) |
-| **View as a static page** | [![nbviewer](https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.svg)](https://nbviewer.org/github/BrainardLab/wppmpy/blob/main/src/hong_etal_2025/ellipses_from_tables.ipynb) |
+| **Run interactively in your browser** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/BrainardLab/wppmpy_public/blob/main/src/hong_etal_2025/ellipses_from_tables.ipynb) |
+| **View as a static page** | [![nbviewer](https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.svg)](https://nbviewer.org/github/BrainardLab/wppmpy_public/blob/main/src/hong_etal_2025/ellipses_from_tables.ipynb) |
 
 ---
 
 ### More Hong et al. (2025) notebook examples
 
-Additional notebooks — including ones best run locally from the cloned repository — are listed on the [**Hong et al. (2025) notebooks wiki page**](https://github.com/BrainardLab/wppmpy/wiki/Hong-et-al-2025-Notebooks), along with static previews of each.
+Additional notebooks — including ones best run locally from the cloned repository — are listed on the [**Hong et al. (2025) notebooks wiki page**](https://github.com/BrainardLab/wppmpy_public/wiki/Hong-et-al-2025-Notebooks), along with static previews of each.
 
 ---
 

@@ -25,7 +25,7 @@ repos:
         pass_filenames: false
     -   id: pytest
         name: pytest
-        entry: .venv/bin/pytest
+        entry: analysis.venv/bin/pytest
         language: system
         pass_filenames: false
         always_run: true
@@ -36,6 +36,6 @@ repos:
         pass_filenames: false
         args:
         - --exclude
-        - (^|/)(\.venv|venv)(/|$)
+        - (^|/)(analysis\.venv|aepsych\.venv|venv)(/|$)
         - .
         files: \.py$

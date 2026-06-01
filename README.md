@@ -129,12 +129,7 @@ The WPPM was fit to color discrimination data from eight participants and used t
 
 **Data:** download the required OSF data subset once after installation by running `python analysis/upenn/hong_etal_2025/download_data.py`.
 
-| | |
-|---|---|
-| **Run interactively in your browser** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/BrainardLab/wppmpy_public/blob/main/analysis/upenn/hong_etal_2025/ellipses_from_tables.ipynb) |
-| **View as a static page** | [![nbviewer](https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.svg)](https://nbviewer.org/github/BrainardLab/wppmpy_public/blob/main/analysis/upenn/hong_etal_2025/ellipses_from_tables.ipynb) |
-
----
+Run locally: `analysis/upenn/hong_etal_2025/ellipses_from_tables.ipynb`
 
 ---
 

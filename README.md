@@ -136,10 +136,6 @@ The WPPM was fit to color discrimination data from eight participants and used t
 
 ---
 
-### More Hong et al. (2025) notebook examples
-
-Additional notebooks — including ones best run locally from the cloned repository — are listed on the [**Hong et al. (2025) notebooks wiki page**](https://github.com/BrainardLab/wppmpy_public/wiki/Hong-et-al-2025-Notebooks), along with static previews of each.
-
 ---
 
 ## Repository layout

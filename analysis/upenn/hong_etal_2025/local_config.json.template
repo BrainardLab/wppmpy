@@ -1,0 +1,5 @@
+{
+    "data_dir": "/path/to/data/hong_etal_2025",
+    "analysis_dir": "/path/to/analysis/upenn/hong_etal_2025",
+    "data_repo": "https://osf.io/k27js"
+}

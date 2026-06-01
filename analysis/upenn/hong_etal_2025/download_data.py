@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Download the subset of the Hong et al. (2025) OSF dataset needed by these notebooks.
 
-Downloads into  <repo_root>/data/hong_etal_2025/  (git-ignored),
+Downloads into the directory specified by data_dir in local_config.json,
+or <repo_root>/data/hong_etal_2025/ if no config is found (git-ignored),
 preserving OSF folder structure.
 
 Files fetched (always)
@@ -35,8 +36,20 @@ from typing import Any
 
 OSF_NODE = "k27js"
 OSF_API = "https://api.osf.io/v2"
-REPO_ROOT = Path(__file__).parent.parent.parent
-DEFAULT_DATA_DIR = REPO_ROOT / "data" / "hong_etal_2025"
+_SCRIPT_DIR = Path(__file__).parent
+_REPO_ROOT = _SCRIPT_DIR.parent.parent.parent
+
+
+def _default_data_dir() -> Path:
+    """Return data_dir from local_config.json if present, else within-repo default."""
+    cfg_path = _SCRIPT_DIR / "local_config.json"
+    if cfg_path.exists():
+        with open(cfg_path) as f:
+            cfg = json.load(f)
+        if "data_dir" in cfg:
+            return Path(cfg["data_dir"])
+    return _REPO_ROOT / "data" / "hong_etal_2025"
+
 
 DEFAULT_SUBJECTS = [1]  # sub1 = subject CH
 
@@ -54,9 +67,9 @@ def _get_json(url: str) -> dict[str, Any]:
 def _download_file(download_url: str, dest: Path) -> None:
     dest.parent.mkdir(parents=True, exist_ok=True)
     if dest.exists():
-        print(f"  skip  {dest.relative_to(REPO_ROOT)}  (already exists)")
+        print(f"  skip  {dest.relative_to(_REPO_ROOT)}  (already exists)")
         return
-    print(f"  fetch {dest.relative_to(REPO_ROOT)}")
+    print(f"  fetch {dest.relative_to(_REPO_ROOT)}")
     req = urllib.request.Request(download_url)
     with urllib.request.urlopen(req, timeout=120) as resp, open(dest, "wb") as fh:
         while chunk := resp.read(1 << 20):
@@ -207,8 +220,9 @@ def main() -> None:
     parser.add_argument(
         "--data-dir",
         type=Path,
-        default=DEFAULT_DATA_DIR,
-        help="Destination directory (default: %(default)s)",
+        default=None,
+        help="Destination directory (default: data_dir from local_config.json, "
+        "or data/hong_etal_2025/ within the repo if no config found)",
     )
     parser.add_argument(
         "--fits",
@@ -218,7 +232,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    data_dir: Path = args.data_dir
+    data_dir: Path = args.data_dir if args.data_dir is not None else _default_data_dir()
     data_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"Fetching OSF node '{OSF_NODE}' → {data_dir}")

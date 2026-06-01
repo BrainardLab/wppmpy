@@ -40,8 +40,6 @@ aepsych/
   aepsych_dconfig/        # MachineConfig, ExptConfig, PregenSobolConfig
   communication/          # MATLAB communication class
     WPPMCommunicator.m    # mirrors Python CommunicateViaTextFile
-  expt/                   # placeholder for future experiment scripts
-  sim/                    # placeholder for future simulation scripts
   networkDisk_tests/      # sender.py / recipient.py / recipient.m test scripts
 ```
 

@@ -27,24 +27,24 @@ pyenv install 3.12.2
 Then create the venv (from inside `aepsych/`):
 
 ```bash
-cd /path/to/wppmpy/aepsych
-~/.pyenv/versions/3.12.2/bin/python3 -m venv .venv
-source .venv/bin/activate
+cd /path/to/wppmpy_public/aepsych
+~/.pyenv/versions/3.12.2/bin/python3 -m venv aepsych.venv
+source aepsych.venv/bin/activate
 pip install -e .
 ```
 
 ### Windows
 
 ```bash
-python -m venv .venv
-.venv\Scripts\activate
+python -m venv aepsych.venv
+aepsych.venv\Scripts\activate
 pip install -e .
 ```
 
 ### Verifying tkinter works
 
 ```bash
-.venv/bin/python -c "import tkinter; tkinter._test()"
+aepsych.venv/bin/python -c "import tkinter; tkinter._test()"
 ```
 
 ---
@@ -87,7 +87,7 @@ running:
 
 ```bash
 export WPPM_CONFIG_DIR=/path/to/wppmpy_private/aepsych/wppmopl
-source /path/to/wppmpy_private/aepsych/.venv/bin/activate
+source /path/to/wppmpy_private/aepsych/aepsych.venv/bin/activate
 python networkDisk_tests/sender.py
 ```
 
@@ -117,7 +117,7 @@ Start the recipient before the sender.
 **Step 2** — In a terminal with the aepsych venv active:
 
 ```bash
-source /path/to/wppmpy/aepsych/.venv/bin/activate
+source /path/to/wppmpy_public/aepsych/aepsych.venv/bin/activate
 python networkDisk_tests/sender.py
 ```
 

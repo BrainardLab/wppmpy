@@ -167,8 +167,6 @@ aepsych/                          # experiment / simulation environment (separat
   local_config.json.template      # copy to local_config.json and fill in paths
   aepsych_dconfig/                # config package: MachineConfig, ExptConfig
   networkDisk_tests/              # sender/recipient test scripts (Python + MATLAB)
-  expt/                           # placeholder for experiment scripts
-  sim/                            # placeholder for simulation scripts
 ```
 
 ---

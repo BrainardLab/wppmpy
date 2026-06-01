@@ -13,7 +13,7 @@
 
 %% Add communication class to path
 here = fileparts(mfilename('fullpath'));
-addpath(fullfile(here, '..', 'communication'));
+addpath(fullfile(here, '..', 'matlab'));
 
 %% Path from preferences
 network_disk_path = getpref('wppm', 'network_disk_path');

@@ -38,7 +38,7 @@ aepsych/
   local_config.json.template
   README.md               # install + usage instructions
   aepsych_dconfig/        # MachineConfig, ExptConfig, PregenSobolConfig
-  communication/          # MATLAB communication class
+  matlab/                 # MATLAB communication class
     WPPMCommunicator.m    # mirrors Python CommunicateViaTextFile
   networkDisk_tests/      # sender.py / recipient.py / recipient.m test scripts
 ```
@@ -96,10 +96,10 @@ Tests the sender/recipient protocol without a live AEPsych server.
   from `ellipsoids-elife2025`.
 
 - **`recipient.m`** — MATLAB recipient stand-in. Uses `WPPMCommunicator` from
-  `aepsych/communication/`. Added to path via `addpath` relative to the script
+  `aepsych/matlab/`. Added to path via `addpath` relative to the script
   location. Requires the `wppm.network_disk_path` MATLAB preference.
 
-### WPPMCommunicator (aepsych/communication/WPPMCommunicator.m)
+### WPPMCommunicator (aepsych/matlab/WPPMCommunicator.m)
 
 MATLAB class mirroring Python's `CommunicateViaTextFile`. Key interface:
 

@@ -41,8 +41,10 @@ fprintf('Initialization confirmed.\n');
 trial_counter = 0;
 while ~comm.terminate
     comm.confirmRGBvals(0.1);
-    trial_counter = trial_counter + 1;
-    fprintf('Trial #%d confirmed.\n', trial_counter);
+    if ~comm.terminate
+        trial_counter = trial_counter + 1;
+        fprintf('Trial #%d confirmed.\n', trial_counter);
+    end
 end
 
 fprintf('Communication complete (%d trials).\n', trial_counter);

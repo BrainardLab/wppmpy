@@ -15,14 +15,20 @@ dependencies = [
 # Pulls in the paper repo (jax, pandas, scikit-image, shapely, etc.) from GitHub.
 # JAX note: this installs the CPU-only build.  For GPU support install
 # jax[cuda12] separately; see https://jax.readthedocs.io/en/latest/installation.html
+# Branch note: pinned to @dev to match aepsych/pyproject.toml and the private repo.
+# Change to @main (or remove pin) when dev is merged into main in ellipsoids_eLife2025.
 notebooks = [
-    "ellipsoids-elife2025 @ git+https://github.com/fh862/ellipsoids_eLife2025.git#subdirectory=ellipsoids",
+    "ellipsoids-elife2025 @ git+https://github.com/fh862/ellipsoids_eLife2025.git@dev#subdirectory=ellipsoids",
     "pandas",
     "jupyter",
     "jupyterlab",
     "nbconvert",
 ]
 dev = ["pytest"]
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["."]

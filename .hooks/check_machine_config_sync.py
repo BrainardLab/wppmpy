@@ -1,5 +1,5 @@
 """Pre-commit hook: machine_config.py must be byte-for-byte identical in
-wppmpy and wppmpy_private.  Assumes the two repos are siblings on disk
+wppmpy_public and wppmpy_private.  Assumes the two repos are siblings on disk
 (both under the same parent directory), which matches the standard lab layout.
 """
 
@@ -16,7 +16,7 @@ if not OTHER_COPY.exists():
 
 if THIS_COPY.read_text() != OTHER_COPY.read_text():
     print("ERROR: machine_config.py has diverged between repos.")
-    print(f"  this copy (wppmpy):          {THIS_COPY}")
+    print(f"  this copy (wppmpy_public):   {THIS_COPY}")
     print(f"  other copy (wppmpy_private): {OTHER_COPY}")
     print("Make both files identical before committing.")
     sys.exit(1)

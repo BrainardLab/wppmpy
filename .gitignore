@@ -27,5 +27,5 @@ local_config.json
 # Local data and analysis outputs (machine-specific; .gitkeep files track dir structure)
 local/
 
-# Downloaded datasets — each study gets its own subfolder, e.g. data/hong_etal_2025/
+# Legacy: data/ was used before the local/ scheme; kept to ignore any stale copies.
 data/

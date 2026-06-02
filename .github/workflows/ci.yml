@@ -35,23 +35,23 @@ jobs:
           which python
           python -c "import sys; print('sys.executable=', sys.executable, 'sys.prefix=', sys.prefix, 'version=', sys.version)"
 
-          # Remove any pre-existing .venv (if it was committed or left behind)
-          if [ -e ".venv" ]; then
-            echo "Removing pre-existing .venv"
-            rm -rf .venv
-            echo "Removed .venv"
+          # Remove any pre-existing analysis.venv (if it was committed or left behind)
+          if [ -e "analysis.venv" ]; then
+            echo "Removing pre-existing analysis.venv"
+            rm -rf analysis.venv
+            echo "Removed analysis.venv"
           fi
 
-          echo "Attempting to create venv at .venv (try python then python3)"
-          if python -m venv .venv > /dev/null 2>&1; then
-            echo "Created venv with 'python -m venv .venv'"
-          elif python3 -m venv .venv > /dev/null 2>&1; then
-            echo "Created venv with 'python3 -m venv .venv'"
+          echo "Attempting to create venv at analysis.venv (try python then python3)"
+          if python -m venv analysis.venv > /dev/null 2>&1; then
+            echo "Created venv with 'python -m venv analysis.venv'"
+          elif python3 -m venv analysis.venv > /dev/null 2>&1; then
+            echo "Created venv with 'python3 -m venv analysis.venv'"
           else
             echo "ERROR: failed to create venv with both 'python' and 'python3'. Dumping diagnostics..."
             echo "---- python -m venv stdout/stderr ----"
-            python -m venv .venv || true
-            python3 -m venv .venv || true
+            python -m venv analysis.venv || true
+            python3 -m venv analysis.venv || true
             echo "---- workspace listing ----"
             ls -la
             echo "---- find top-level ----"
@@ -59,15 +59,15 @@ jobs:
             exit 1
           fi
 
-          echo "Listing .venv contents (top-level):"
-          ls -la .venv || true
-          echo "Listing .venv/bin:"
-          ls -la .venv/bin || true
+          echo "Listing analysis.venv contents (top-level):"
+          ls -la analysis.venv || true
+          echo "Listing analysis.venv/bin:"
+          ls -la analysis.venv/bin || true
 
-          VENV_PY=.venv/bin/python
+          VENV_PY=analysis.venv/bin/python
           if [ ! -x "$VENV_PY" ]; then
             echo "ERROR: $VENV_PY not executable or missing. Showing find results:"
-            find .venv -maxdepth 4 -ls || true
+            find analysis.venv -maxdepth 4 -ls || true
             exit 1
           fi
 
@@ -82,16 +82,16 @@ jobs:
       - name: Run Ruff (lint + format check)
         shell: bash -l {0}
         run: |
-          .venv/bin/python -m ruff --version || echo "ruff not installed"
-          .venv/bin/python -m ruff check .
+          analysis.venv/bin/python -m ruff --version || echo "ruff not installed"
+          analysis.venv/bin/python -m ruff check .
 
       - name: Run mypy (type check)
         shell: bash -l {0}
         run: |
-          .venv/bin/python -m mypy --version || echo "mypy not installed"
-          .venv/bin/python -m mypy .
+          analysis.venv/bin/python -m mypy --version || echo "mypy not installed"
+          analysis.venv/bin/python -m mypy .
 
       - name: Run pytest
         shell: bash -l {0}
         run: |
-          .venv/bin/python -m pytest --tb=short -v
+          analysis.venv/bin/python -m pytest --tb=short -v

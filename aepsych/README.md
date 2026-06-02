@@ -63,7 +63,8 @@ each experiment sub-directory can have its own config, or share the one at the
 Copy the template and fill in your machine's paths:
 
 ```bash
-cp local_config.json.template local_config.json
+cp generic/networkdisktest/local_config.json.template \
+   generic/networkdisktest/local_config.json
 # edit local_config.json
 ```
 
@@ -95,16 +96,12 @@ python generic/networkdisktest/sender.py
 Python equivalent of MATLAB's `setpref` — set it once per shell session for the
 experiment you are working on.
 
-### MATLAB preference
+### MATLAB side
 
-`recipient.m` reads the network disk path via a MATLAB preference.  Set it once
-per machine:
-
-```matlab
-setpref('wppm', 'network_disk_path', '/path/to/shared/network/disk');
-```
-
-This must match `network_disk_path` in `local_config.json`.
+`recipient.m` reads `network_disk_path` directly from
+`generic/networkdisktest/local_config.json` using `jsondecode` — no
+`setpref` required.  The same config file is used by `sender.py` and
+`recipient.py`, so only one file needs to be configured per machine.
 
 ---
 

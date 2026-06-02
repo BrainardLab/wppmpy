@@ -54,7 +54,8 @@ pip install -e ".[notebooks]"
 
 JAX (CPU build) is pulled in automatically.  For GPU acceleration see the note below.
 
-Then download the required data subset from OSF once (saved to `data/hong_etal_2025/`):
+Then download the required data subset from OSF once (destination set by `data_dir`
+in `analysis/upenn/hong_etal_2025/local_config.json` — defaults to `local/data/upenn/hong_etal_2025/`):
 
 ```bash
 python analysis/upenn/hong_etal_2025/download_data.py
@@ -150,8 +151,9 @@ analysis/
       ellipses_from_tables.ipynb  # reproduce Figure 2C from pre-computed CSV tables
       ellipses_from_fits.ipynb    # reproduce Figure 2C from pkl fit parameters
 
-data/
-  hong_etal_2025/                 # OSF data downloaded by download_data.py
+local/                            # machine-local data and outputs (git-ignored)
+  data/upenn/hong_etal_2025/      # OSF data (default location from local_config.json)
+  analysis/upenn/hong_etal_2025/  # executed notebooks and figures
 
 tests/                            # pytest test suite for the toolbox
 

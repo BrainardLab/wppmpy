@@ -1,22 +1,18 @@
 % recipient.m
 % MATLAB test stand-in for recipient.py.
 %
-% Set the network_disk_path preference before running, e.g.:
-%   setpref('wppm', 'network_disk_path', '/path/to/shared/disk')
+% Reads network_disk_path from local_config.json in the same directory.
+% Copy local_config.json.template -> local_config.json and fill in the path.
 %
 % Responses are random (0 or 1).
-
-%{
-    % Set preference before running, e.g.:
-    setpref('wppm', 'network_disk_path', '/Users/dhb/Dropbox (Personal)/ShareWithX/ShareWithWPPM/TestCommunication');
-%}
 
 %% Add communication class to path
 here = fileparts(mfilename('fullpath'));
 addpath(fullfile(here, '..', 'matlab'));
 
-%% Path from preferences
-network_disk_path = getpref('wppm', 'network_disk_path');
+%% Read config
+cfg = jsondecode(fileread(fullfile(here, 'local_config.json')));
+network_disk_path = cfg.network_disk_path;
 
 %% Get experiment info
 dlg_answer = inputdlg( ...

@@ -19,6 +19,7 @@ notebooks = [
     "ellipsoids-elife2025 @ git+https://github.com/fh862/ellipsoids_eLife2025.git#subdirectory=ellipsoids",
     "pandas",
     "jupyter",
+    "nbconvert",
 ]
 dev = ["pytest"]
 

@@ -8,7 +8,7 @@
 
 %% Add communication class to path
 here = fileparts(mfilename('fullpath'));
-addpath(fullfile(here, '..', 'matlab'));
+addpath(fullfile(here, '..', '..', 'matlab'));
 
 %% Read config
 cfg = jsondecode(fileread(fullfile(here, 'local_config.json')));

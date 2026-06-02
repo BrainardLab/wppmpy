@@ -160,12 +160,31 @@ tests/                            # pytest test suite for the toolbox
 aepsych/                          # experiment / simulation environment (separate venv)
   README.md                       # full install and usage instructions
   pyproject.toml                  # installs wppmpy-aepsych package
-  aepsych_dconfig/                # config package: MachineConfig, ExptConfig
+  aepsych_dconfig/                # config package: MachineConfig, ExptConfig, AepsychIniConfig
   generic/
     networkdisktest/              # sender/recipient test scripts (Python + MATLAB)
       local_config.json           # machine paths (git-ignored; copy from .template)
   matlab/                         # MATLAB communication class (WPPMCommunicator.m)
 ```
+
+---
+
+## AEPsych provenance and local_config.json
+
+`local_config.json` files carry an `aepsych_config_file` field:
+
+- **Non-empty** (e.g. `"single_3d_colorDiscrimination_EAVC_4strats.ini"`) — the
+  AEPsych experiment was run from scripts in this repo; the named `.ini` lives in
+  `aepsych_config/` and is the single source of truth for search bounds and EAVC
+  criterion.  `AepsychIniConfig.from_expt_dir()` reads it at runtime.
+
+- **Empty string `""`** — data collection and WPPM fitting happened outside this
+  repo (in the `ellipsoids` / `ellipsoids_eLife2025` repos).  These experiments enter
+  wppmpy at the WPPM-fit stage; there is no AEPsych runner or ini file for them here.
+  Code that reads `aepsych_config_file` should treat `""` as "no ini available."
+
+For `hong_etal_2025` the field is `""` — that experiment's AEPsych session was
+managed externally and is not reproduced in this repo.
 
 ---
 

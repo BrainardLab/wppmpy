@@ -1,7 +1,7 @@
 # wppmpy aepsych environment
 
 Python environment for running AEPsych-based color discrimination experiments.
-`networkDisk_tests/` contains `sender.py` / `recipient.py` / `recipient.m` for
+`generic/networkdisktest/` contains `sender.py` / `recipient.py` / `recipient.m` for
 testing the sender/recipient communication protocol without a live AEPsych server.
 
 ---
@@ -78,8 +78,8 @@ add experiment-specific fields and share one file across scripts.
 
 ### WPPM_CONFIG_DIR — for scripts that live outside the experiment tree
 
-Scripts in `networkDisk_tests/` walk up from their own `__file__` and find
-`aepsych/local_config.json` automatically when run with this venv.
+Scripts in `generic/networkdisktest/` walk up from their own `__file__` and find
+`aepsych/generic/networkdisktest/local_config.json` automatically when run with this venv.
 
 If you want to run these scripts from a *different* repo's venv (e.g.
 `wppmpy_private`) and have them use *that* repo's config, set the env var before
@@ -88,7 +88,7 @@ running:
 ```bash
 export WPPM_CONFIG_DIR=/path/to/wppmpy_private/aepsych/wppmopl
 source /path/to/wppmpy_private/aepsych/aepsych.venv/bin/activate
-python networkDisk_tests/sender.py
+python generic/networkdisktest/sender.py
 ```
 
 `WPPM_CONFIG_DIR` is checked first, before the `__file__`-based walk.  It is the
@@ -112,13 +112,13 @@ This must match `network_disk_path` in `local_config.json`.
 
 Start the recipient before the sender.
 
-**Step 1** — Open `networkDisk_tests/recipient.m` in MATLAB and run it.
+**Step 1** — Open `generic/networkdisktest/recipient.m` in MATLAB and run it.
 
 **Step 2** — In a terminal with the aepsych venv active:
 
 ```bash
 source /path/to/wppmpy_public/aepsych/aepsych.venv/bin/activate
-python networkDisk_tests/sender.py
+python generic/networkdisktest/sender.py
 ```
 
 Enter the same subject ID, initials, and session number as the MATLAB dialog.

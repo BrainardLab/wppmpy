@@ -1,0 +1,4 @@
+{
+    "_comment": "Copy to local_config.json. network_disk_path is the root of the shared folder used for Python↔MATLAB communication. Change to any absolute path on this machine.",
+    "network_disk_path": "/path/to/shared/network/disk"
+}

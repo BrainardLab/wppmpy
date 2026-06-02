@@ -36,13 +36,13 @@ experiments. Has its own venv and `pyproject.toml`.
 ```
 aepsych/
   pyproject.toml          # package: wppmpy-aepsych
-  local_config.json       # gitignored — copy from .template and fill in
-  local_config.json.template
   README.md               # install + usage instructions
   aepsych_dconfig/        # MachineConfig, ExptConfig, PregenSobolConfig
   matlab/                 # MATLAB communication class
     WPPMCommunicator.m    # mirrors Python CommunicateViaTextFile
-  networkDisk_tests/      # sender.py / recipient.py / recipient.m test scripts
+  generic/
+    networkdisktest/      # sender.py / recipient.py / recipient.m test scripts
+      local_config.json   # gitignored — copy from .template and fill in
 ```
 
 ### Install
@@ -60,7 +60,7 @@ pip install -e .
 ### Run scripts
 
 ```bash
-aepsych.venv/bin/python networkDisk_tests/sender.py
+aepsych.venv/bin/python generic/networkdisktest/sender.py
 ```
 
 ### Key design decisions
@@ -81,7 +81,7 @@ aepsych.venv/bin/python networkDisk_tests/sender.py
   `network_disk_path`, `stim_at_thres_path`, `flag_load_rgb`.
   (`color_thres_base_dir` was removed — not needed by sender/recipient test scripts.)
 
-## networkDisk_tests/ — communication test scripts
+## generic/networkdisktest/ — communication test scripts
 
 Tests the sender/recipient protocol without a live AEPsych server.
 
@@ -90,7 +90,7 @@ Tests the sender/recipient protocol without a live AEPsych server.
   random RGB trial pairs and finalises. Uses `network_disk_path` and
   `flag_load_rgb` from `local_config.json` (`flag_load_rgb = false` for random
   RGB; `stim_at_thres_path` only needed if `true`). Run as:
-  `aepsych.venv/bin/python networkDisk_tests/sender.py`
+  `aepsych.venv/bin/python generic/networkdisktest/sender.py`
 
 - **`recipient.py`** — Python recipient stand-in. Prompts via `input()`, then
   polls for the session file by glob pattern (includes session number to avoid

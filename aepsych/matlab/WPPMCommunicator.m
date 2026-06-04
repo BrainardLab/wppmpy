@@ -27,28 +27,25 @@ classdef WPPMCommunicator < handle
 %   end
 
     properties
-        filePath   (1,:) char             % full path to shared session file
-        retryDelay (1,1) double = 1/60    % polling interval in seconds
-        timeout    (1,1) double = 1200    % max wait in seconds (20 min)
-        terminate  (1,1) logical = false  % true when 'Done' received
+        filePath                      % full path to shared session file
+        retryDelay = 1/60             % polling interval in seconds
+        timeout    = 1200             % max wait in seconds (20 min)
+        terminate  = false            % true when 'Done' received
     end
 
     % ------------------------------------------------------------------ %
     methods
 
-        function obj = WPPMCommunicator(filePath, options)
+        function obj = WPPMCommunicator(filePath, retryDelay, timeout)
         % WPPMCommunicator  Construct communicator for an existing session file.
         %
         %   comm = WPPMCommunicator(fullFilePath)
-        %   comm = WPPMCommunicator(fullFilePath, retryDelay=1/60, timeout=1200)
-            arguments
-                filePath            (1,:) char
-                options.retryDelay  (1,1) double = 1/60
-                options.timeout     (1,1) double = 1200
-            end
+        %   comm = WPPMCommunicator(fullFilePath, retryDelay, timeout)
+            if nargin < 2 || isempty(retryDelay), retryDelay = 1/60; end
+            if nargin < 3 || isempty(timeout),    timeout    = 1200;  end
             obj.filePath   = filePath;
-            obj.retryDelay = options.retryDelay;
-            obj.timeout    = options.timeout;
+            obj.retryDelay = retryDelay;
+            obj.timeout    = timeout;
         end
 
         % -------------------------------------------------------------- %

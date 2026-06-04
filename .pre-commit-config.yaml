@@ -25,7 +25,7 @@ repos:
         pass_filenames: false
     -   id: pytest
         name: pytest
-        entry: analysis.venv/bin/pytest
+        entry: python .hooks/run_pytest.py
         language: system
         pass_filenames: false
         always_run: true

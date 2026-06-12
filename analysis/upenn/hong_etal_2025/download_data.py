@@ -23,11 +23,12 @@ Usage
     python analysis/upenn/hong_etal_2025/download_data.py \
         [--subjects 1 2 4 ...] [--fits]
 
-No third-party packages required — stdlib only.
+No third-party packages required — stdlib only (certifi used if available).
 """
 
 import argparse
 import json
+import ssl
 import sys
 import urllib.error
 import urllib.request
@@ -37,6 +38,41 @@ from typing import Any
 OSF_API = "https://api.osf.io/v2"
 _SCRIPT_DIR = Path(__file__).parent
 _REPO_ROOT = _SCRIPT_DIR.parent.parent.parent
+
+# Known system CA bundle locations (covers macOS, Debian/Ubuntu, RHEL, OpenSUSE)
+_CA_PATHS = [
+    "/etc/ssl/cert.pem",
+    "/etc/ssl/certs/ca-certificates.crt",
+    "/etc/pki/tls/certs/ca-bundle.crt",
+    "/etc/ssl/ca-bundle.pem",
+    "/usr/local/etc/openssl/cert.pem",
+]
+
+
+def _make_ssl_context() -> ssl.SSLContext:
+    """Return an SSL context that works on macOS Python.org installs and Linux.
+
+    Python.org Python on macOS ships with its own OpenSSL that does not use the
+    system keychain, so the default context fails with CERTIFICATE_VERIFY_FAILED.
+    We work around this by preferring certifi's CA bundle (if installed) and
+    falling back to known system CA file locations before accepting the default.
+    """
+    try:
+        import certifi
+
+        return ssl.create_default_context(cafile=certifi.where())
+    except ImportError:
+        pass
+    for ca_file in _CA_PATHS:
+        if Path(ca_file).exists():
+            try:
+                return ssl.create_default_context(cafile=ca_file)
+            except ssl.SSLError:
+                continue
+    return ssl.create_default_context()
+
+
+_SSL_CTX = _make_ssl_context()
 
 
 def _load_config() -> dict[str, Any]:
@@ -76,7 +112,7 @@ DEFAULT_SUBJECTS = [1]  # sub1 = subject CH
 def _get_json(url: str) -> dict[str, Any]:
     req = urllib.request.Request(url, headers={"Accept": "application/json"})
     try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
+        with urllib.request.urlopen(req, timeout=30, context=_SSL_CTX) as resp:
             return json.loads(resp.read().decode())  # type: ignore[no-any-return]
     except urllib.error.HTTPError as exc:
         print(f"  HTTP {exc.code} for {url}", file=sys.stderr)
@@ -90,7 +126,10 @@ def _download_file(download_url: str, dest: Path) -> None:
         return
     print(f"  fetch {dest.relative_to(_REPO_ROOT)}")
     req = urllib.request.Request(download_url)
-    with urllib.request.urlopen(req, timeout=120) as resp, open(dest, "wb") as fh:
+    with (
+        urllib.request.urlopen(req, timeout=120, context=_SSL_CTX) as resp,
+        open(dest, "wb") as fh,
+    ):
         while chunk := resp.read(1 << 20):
             fh.write(chunk)
 

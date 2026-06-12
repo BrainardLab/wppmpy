@@ -2,7 +2,7 @@
     "_comment": "Copy to local_config.json. The defaults store data/analysis within the repo under local/ (git-ignored). Change data_dir and analysis_dir to any absolute path on this machine if you prefer data elsewhere (e.g. a shared network drive). Relative paths are resolved from the repo root. Both must be non-empty and different. data_repo is only read by download_data.py.",
     "data_dir": "local/data/upenn/hong_etal_2025",
     "analysis_dir": "local/analysis/upenn/hong_etal_2025",
-    "_comment_dirs": "transform_dir: absolute path to transformation matrices for this experiment. calibration_dir: absolute path to raw apparatus calibration data. Convention: <data_dir>/transformation_matrices and <data_dir>/calibration.",
+    "_comment_dirs": "transform_dir: absolute path to the directory containing monitor calibration CSV files (M_2DWToRGB_*.csv etc). download_data.py places these at <data_dir>/Calibration and transformation/Transformation matrices. calibration_dir: not used by any current notebook — leave empty.",
     "transform_dir": "",
     "calibration_dir": "",
     "data_repo": "https://osf.io/k27js",

@@ -55,7 +55,7 @@ pip install -e .
 ```
 
 `ellipsoids-elife2025` is fetched automatically from the `dev` branch of
-`fh862/ellipsoids_eLife2025` on GitHub — no manual clone needed.
+`fh862/ellipsoids_public` on GitHub — no manual clone needed.
 
 ### Run scripts
 
@@ -74,7 +74,7 @@ aepsych.venv/bin/python generic/networkdisktest/sender.py
   from the installed `ellipsoids-elife2025` package; no `sys.path` hacks needed.
 
 - **`aepsych_dconfig/config_pregenSobol.py`** is a cleaned-up copy of
-  `PregenSobolConfig` from `ellipsoids_eLife2025/ellipsoids/dconfig/`. Kept
+  `PregenSobolConfig` from `ellipsoids_public/ellipsoids/dconfig/`. Kept
   local to avoid the namespace package conflict at import time.
 
 - **`local_config.json`** (gitignored) holds machine-specific paths:

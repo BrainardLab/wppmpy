@@ -9,7 +9,7 @@ description = "AEPsych experiment environment for wppmpy"
 # ellipsoids-elife2025 is installed from the eLife2025 repo so that dconfig,
 # analysis, and other modules can be imported without sys.path hacks.
 dependencies = [
-    "ellipsoids-elife2025 @ git+https://github.com/fh862/ellipsoids_eLife2025.git@dev#subdirectory=ellipsoids",
+    "ellipsoids-elife2025 @ git+https://github.com/fh862/ellipsoids_public.git@dev#subdirectory=ellipsoids",
     "aepsych==0.7.3",
     "jax<0.5",
     "jaxlib",

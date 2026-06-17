@@ -83,12 +83,12 @@ source analysis.venv/bin/activate      # macOS / Linux
 # analysis.venv\Scripts\activate       # Windows
 ```
 
-### Using a local clone of ellipsoids_eLife2025
+### Using a local clone of ellipsoids_public
 
 If you have a local clone and want to use it instead of the GitHub copy:
 
 ```bash
-pip install -e /path/to/ellipsoids_eLife2025/ellipsoids
+pip install -e /path/to/ellipsoids_public/ellipsoids
 ```
 
 ---
@@ -179,7 +179,7 @@ aepsych/                          # experiment / simulation environment (separat
   criterion.  `AepsychIniConfig.from_expt_dir()` reads it at runtime.
 
 - **Empty string `""`** — data collection and WPPM fitting happened outside this
-  repo (in the `ellipsoids` / `ellipsoids_eLife2025` repos).  These experiments enter
+  repo (in the `ellipsoids` / `ellipsoids_public` repos).  These experiments enter
   wppmpy at the WPPM-fit stage; there is no AEPsych runner or ini file for them here.
   Code that reads `aepsych_config_file` should treat `""` as "no ini available."
 

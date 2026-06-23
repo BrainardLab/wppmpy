@@ -15,10 +15,8 @@ dependencies = [
 # Pulls in the paper repo (jax, pandas, scikit-image, shapely, etc.) from GitHub.
 # JAX note: this installs the CPU-only build.  For GPU support install
 # jax[cuda12] separately; see https://jax.readthedocs.io/en/latest/installation.html
-# Branch note: pinned to @dev to match aepsych/pyproject.toml and the private repo.
-# Change to @main (or remove pin) when dev is merged into main in ellipsoids_public.
 notebooks = [
-    "ellipsoids-elife2025 @ git+https://github.com/fh862/ellipsoids_public.git@dev#subdirectory=ellipsoids",
+    "ellipsoids-elife2025 @ git+https://github.com/fh862/ellipsoids_public.git@main#subdirectory=ellipsoids",
     "pandas",
     "jupyter",
     "jupyterlab",
